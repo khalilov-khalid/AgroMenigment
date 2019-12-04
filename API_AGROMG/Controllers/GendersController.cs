@@ -25,8 +25,6 @@ namespace API_AGROMG.Controllers
         [HttpGet("{lang}")]
         public async Task<IActionResult> GetGender(string lang)
         {
-            //var x = await _data.GetContentLanguage(languageid, "191120191234");
-
             var gender = await _context.Genders.Select(s => new Gender
             {
                 Id = s.Id,

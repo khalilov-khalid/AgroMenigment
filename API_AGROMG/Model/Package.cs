@@ -15,7 +15,7 @@ namespace API_AGROMG.Model
 
         public int HumanCount { get; set; }
 
-        public ICollection<PackageModul> PackageModuls { get; set; }
+        public string ModulContent { get; set; }
 
         public ICollection<Company> Companies { get; set; }
 

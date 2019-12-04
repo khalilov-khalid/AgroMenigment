@@ -6,21 +6,21 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAf1g721y7UUWnNkoUcsdOrAAAAAACAAAAAAADZgAAwAAAABAAAACi7ax6X/cKTbUq/4i30STcAAAAAASAAACgAAAAEAAAANBJ5aGjNMUWjVmfgG8XXj0YAAAALOCR/SDHl+F0u7Pbdkw5hoQ2Nj7Nu+wlFAAAAPRnCKOmA37oyoblCbAPC8eDnyp8</EncryptedPassword>
-    <_PublishTargetUrl>ftp://vac.az</_PublishTargetUrl>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAf1g721y7UUWnNkoUcsdOrAAAAAACAAAAAAADZgAAwAAAABAAAACFxGJ77VSNL70Us+iVQUTpAAAAAASAAACgAAAAEAAAAKztmCYRVVtWl/MfEqOZzUogAAAApcqdVABkZX9QSE9y6F3SraXzGYxp0ivz017HVcOJCYoUAAAAhaBR7RfcEPY+q+boJa+GZNUKVdI=</EncryptedPassword>
+    <_PublishTargetUrl>ftp://173.249.48.223</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="API_AGROMG.deps.json">
-      <publishTime>11/29/2019 20:14:02</publishTime>
+      <publishTime>12/04/2019 16:17:04</publishTime>
     </File>
     <File Include="API_AGROMG.dll">
-      <publishTime>11/29/2019 20:14:01</publishTime>
+      <publishTime>12/04/2019 16:17:01</publishTime>
     </File>
     <File Include="API_AGROMG.pdb">
-      <publishTime>11/29/2019 20:14:01</publishTime>
+      <publishTime>12/04/2019 16:17:01</publishTime>
     </File>
     <File Include="API_AGROMG.runtimeconfig.json">
-      <publishTime>11/29/2019 20:14:02</publishTime>
+      <publishTime>12/04/2019 16:17:04</publishTime>
     </File>
     <File Include="appsettings.Development.json">
       <publishTime>11/01/2019 18:21:42</publishTime>
@@ -137,7 +137,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/21/2019 19:12:24</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>11/29/2019 20:14:02</publishTime>
+      <publishTime>12/04/2019 16:17:04</publishTime>
     </File>
   </ItemGroup>
 </Project>

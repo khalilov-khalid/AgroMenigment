@@ -27,8 +27,6 @@ namespace API_AGROMG.Data
 
         public DbSet<Modul> Moduls { get; set; }
 
-        public DbSet<PackageModul> PackageModuls { get; set; }
-
         public DbSet<Admin> Admins { get; set; }
 
     }

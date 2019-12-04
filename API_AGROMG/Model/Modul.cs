@@ -12,7 +12,5 @@ namespace API_AGROMG.Model
         public string Key { get; set; }
 
         public bool Status { get; set; }
-
-        public ICollection<PackageModul> PackageModuls { get; set; }
     }
 }
