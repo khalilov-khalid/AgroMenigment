@@ -36,7 +36,29 @@ namespace API_AGROMG.Controllers
 
             return Ok(paketlist);
         }
-        
+
+
+        [HttpGet("{id}")]
+
+        public async Task<ActionResult> GetPakets(int id)
+        {
+            var packet = await _context.Packages.FirstOrDefaultAsync(w => w.Id == id);
+
+            if (packet == null)
+            {
+                return NotFound();
+            }
+
+            PacketDto paketlist = new PacketDto
+            {
+                Id = packet.Id,
+                Price = packet.Price,
+                HumanContent = packet.HumanCount,
+                ModulId = JsonConvert.DeserializeObject<List<int>>(packet.ModulContent)
+            };
+
+            return Ok(paketlist);
+        }
 
     }
 }
