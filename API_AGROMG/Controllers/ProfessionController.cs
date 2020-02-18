@@ -25,31 +25,15 @@ namespace API_AGROMG.Controllers
             _context = context;
         }
 
-
-        //[AllowAnonymous]
-        //[HttpGet("{lang}")]
-        //public async Task<ActionResult> GetProdessions(string lang)
-        //{
-        //    var _lang = await _context.Languages.FirstOrDefaultAsync(l => l.Name == lang);
-
-        //    var professions = await _context.Professions.Where(x => x.ShowStatus == true).Select(s=> new Profession
-        //    {
-        //        Id=s.Id,
-        //        Key= _context.LanguageContexts.Where(w=>w.LanguageId==_lang.Id && w.Key==s.Key).FirstOrDefault().Context,                
-        //    }).ToListAsync();
-
-        //    return Ok(professions);
-        //}
-
         //get profession list
         [HttpGet]
         public async Task<ActionResult> GetProdessionsForAdmin()
         {
 
-            var professions = await _context.Professions.Where(x => x.ShowStatus == true).Select(s => new Profession
+            var professions = await _context.Professions.Where(x => x.Status == true).Select(s => new Profession
             {
                 Id = s.Id,
-                Key = _context.LanguageContexts.Where(w => w.LangUnicode == "Az" && w.Key == s.Key).FirstOrDefault().Context,
+                Key = _context.LanguageContexts.Where(w => w.LangUnicode == "az" && w.Key == s.Key).FirstOrDefault().Context,
                 ShowStatus =s.ShowStatus
             }).ToListAsync();
 
@@ -135,6 +119,20 @@ namespace API_AGROMG.Controllers
             if (prof == null)
             {
                 return NotFound();
+            }
+
+            prof.ShowStatus = profession.Showstatus;
+            prof.Key = prof.Key;
+            prof.Status = prof.Status;
+            _context.Entry(prof).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
             }
               
             var deletetcontent = await _context.LanguageContexts.Where(s => s.Key == prof.Key).ToListAsync();

@@ -9,7 +9,15 @@ namespace API_AGROMG.Model
     {
         public int Id { get; set; }
 
+        public string code { get; set; }
+
+        public string code2 { get; set; }
+
+        public string iso { get; set; }
+
         public string Name { get; set; }
+
+
 
     }
 }

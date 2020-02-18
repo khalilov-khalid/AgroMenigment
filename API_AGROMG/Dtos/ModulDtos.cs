@@ -10,6 +10,8 @@ namespace API_AGROMG.Dtos
     {
         public int Id { get; set; }
 
+        public string NumberKey { get; set; }
+
         public List<LangcontentDto> Content { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace API_AGROMG.Model
 
         public DateTime StatusFinishDate { get; set; }
 
-        public Package Package { get; set; }
-                     
+        public Packet  Packet { get; set; }
+
     }
 }

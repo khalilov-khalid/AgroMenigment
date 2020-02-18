@@ -15,16 +15,41 @@ namespace API_AGROMG.Dtos
         public string CompanyAdress { get; set; }
 
         [Required]
-        public List<string> CompanyEmail { get; set; }
+        public string CompanyEmail { get; set; }
 
         [Required]
         public List<string> CompanyTel { get; set; }
 
         [Required]
-        public string UserName { get; set; }
+        public int PacketId { get; set; }
+
+        public DateTime PaymentEndDate { get; set; }
+
         [Required]
+        public string UserName { get; set; }
+        [Required]       
         public string UserUsername { get; set; }
         [Required]
         public string UserPassword { get; set; }
+
+        [Required]
+        public DateTime UserBirthday { get; set; }
+
+        [Required]
+        public string UserAdress { get; set; }
+
+        [Required]
+        public string UserEmail { get; set; }
+
+        [Required]
+        public string UserTel { get; set; }
+
+        [Required]
+        public int UserGenderID { get; set; }
+
+        [Required]
+        public List<int> UserProfessionID { get; set; }
+
+
     }
 }

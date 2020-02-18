@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API_AGROMG.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_AGROMG.Controllers
 {
@@ -29,10 +30,17 @@ namespace API_AGROMG.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Admin(int id)
         {
-            AdminUser admin = new AdminUser()
+            var admin = await _context.Admins.FirstOrDefaultAsync();
+
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            AdminUser loginedadmin = new AdminUser()
             {
                 Id = 1,
-                Name = "Rooter"
+                Name = admin.Username
             };
             
             return Ok(admin);
