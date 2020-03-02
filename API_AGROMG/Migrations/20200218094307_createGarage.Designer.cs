@@ -4,14 +4,16 @@ using API_AGROMG.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API_AGROMG.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200218094307_createGarage")]
+    partial class createGarage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,27 +148,6 @@ namespace API_AGROMG.Migrations
                     b.ToTable("Packets");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.PermissionsGroups", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CompanyId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("RolContent");
-
-                    b.Property<bool>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("PermissionsGroups");
-                });
-
             modelBuilder.Entity("API_AGROMG.Model.Profession", b =>
                 {
                     b.Property<int>("Id")
@@ -182,60 +163,6 @@ namespace API_AGROMG.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Professions");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.Technique", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Color");
-
-                    b.Property<int?>("CompanyId");
-
-                    b.Property<DateTime>("DateOfPurchase");
-
-                    b.Property<string>("EngineNumber");
-
-                    b.Property<string>("EnginePower");
-
-                    b.Property<int>("IsBusy");
-
-                    b.Property<string>("Name");
-
-                    b.Property<DateTime>("ProductionYear");
-
-                    b.Property<string>("RegistrationNumber");
-
-                    b.Property<bool>("Status");
-
-                    b.Property<int>("TechnicalCondition");
-
-                    b.Property<int?>("TechniqueCategoryId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("TechniqueCategoryId");
-
-                    b.ToTable("Techniques");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.TechniqueCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsTrailer");
-
-                    b.Property<string>("Key");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TechniqueCategories");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.User", b =>
@@ -254,7 +181,7 @@ namespace API_AGROMG.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<int>("Gender");
+                    b.Property<int?>("GenderId");
 
                     b.Property<string>("Name");
 
@@ -262,7 +189,7 @@ namespace API_AGROMG.Migrations
 
                     b.Property<byte[]>("PasswordSalt");
 
-                    b.Property<int?>("PermissionsGroupsId");
+                    b.Property<string>("RoleContent");
 
                     b.Property<decimal>("Salary");
 
@@ -276,7 +203,7 @@ namespace API_AGROMG.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("PermissionsGroupsId");
+                    b.HasIndex("GenderId");
 
                     b.ToTable("Users");
                 });
@@ -307,33 +234,15 @@ namespace API_AGROMG.Migrations
                         .HasForeignKey("PacketId");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.PermissionsGroups", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.Technique", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.HasOne("API_AGROMG.Model.TechniqueCategory", "TechniqueCategory")
-                        .WithMany()
-                        .HasForeignKey("TechniqueCategoryId");
-                });
-
             modelBuilder.Entity("API_AGROMG.Model.User", b =>
                 {
                     b.HasOne("API_AGROMG.Model.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("API_AGROMG.Model.PermissionsGroups", "PermissionsGroups")
+                    b.HasOne("API_AGROMG.Model.Gender", "Gender")
                         .WithMany()
-                        .HasForeignKey("PermissionsGroupsId");
+                        .HasForeignKey("GenderId");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.UserProfessions", b =>

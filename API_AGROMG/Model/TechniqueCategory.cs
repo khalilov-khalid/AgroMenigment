@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API_AGROMG.SimpleforDtos
+namespace API_AGROMG.Model
 {
-    public class DataForLanguageDto
+    public class TechniqueCategory
     {
         public int Id { get; set; }
 
-        public List<LangcontentDto> LanguageContent = new List<LangcontentDto>();
+        public string Key { get; set; }
 
+        public bool IsTrailer { get; set; }
     }
 }

@@ -28,38 +28,51 @@ namespace API_AGROMG.Controllers
         {
             DataForRegisterDtos data = new DataForRegisterDtos();
 
+            var Packets = await _context.Packets.ToListAsync();
+
+            foreach (var pack in Packets)
+            {
+                var packetlanglist = await _context.LanguageContexts.Where(s => s.Key == pack.NameKey).ToListAsync();
+
+                DataForLanguageDto x = new DataForLanguageDto()
+                {
+                    Id = pack.Id
+                };
+                foreach (var lang in packetlanglist)
+                {
+                    LangcontentDto y = new LangcontentDto()
+                    {
+                        Languagename = lang.LangUnicode,
+                        Content= lang.Context
+                    };
+                    x.LanguageContent.Add(y);
+                    
+                }
+                data.Packets.Add(x);
+            }
+
+            //professions
             var professionlist = await _context.Professions.Where(s => s.ShowStatus == true && s.Status == true).ToListAsync();
 
             foreach (var prof in professionlist)
             {
                 var proflanglist = await _context.LanguageContexts.Where(w => w.Key == prof.Key).ToListAsync();
 
+                DataForLanguageDto x = new DataForLanguageDto()
+                {
+                    Id = prof.Id
+                };
                 foreach (var lang in proflanglist)
                 {
-                    DataForLanguageDto x = new DataForLanguageDto()
+                    LangcontentDto y = new LangcontentDto()
                     {
-                        Id= prof.Id,
-                        Language = lang.LangUnicode,
-                        Name = lang.Context
+                        Languagename = lang.LangUnicode,
+                        Content = lang.Context
                     };
-                    data.Professions.Add(x);
+                    x.LanguageContent.Add(y);
+
                 }
-            }
-            var Genderlist = await _context.Genders.ToListAsync();
-            
-            foreach (var gender in Genderlist)
-            {
-                var genderlanglist = await _context.LanguageContexts.Where(w => w.Key == gender.Key).ToListAsync();
-                foreach (var lang in genderlanglist)
-                {
-                    DataForLanguageDto y = new DataForLanguageDto()
-                    {
-                        Id= gender.Id,
-                        Language = lang.LangUnicode,
-                        Name = lang.Context
-                    };
-                    data.Genders.Add(y);
-                }
+                data.Professions.Add(x);
             }
             return Ok(data);
         }

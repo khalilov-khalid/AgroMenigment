@@ -38,7 +38,7 @@ namespace API_AGROMG.Controllers
         {
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (await _repo.VerifyUser(id) == null)
+            if (await _auth.VerifyUser(id) == null)
             {
                 return Unauthorized();
             }
@@ -80,10 +80,9 @@ namespace API_AGROMG.Controllers
                 Adress = user.Adress,
                 Birthday = user.Birthday,
                 Salary = user.Salary,
-                GenderID = user.Gender.Id,
+                Gender = user.Gender,
                 Email = user.Email,
-                Phone = user.Tel,
-                RolContent = JsonConvert.DeserializeObject<List<UserPermissionDto>>(user.RoleContent)
+                Phone = user.Tel
             };
             compamyUsers.ProfessionID = await _repo.GetUserProfessions(compamyUsers.ID);
 
@@ -111,9 +110,9 @@ namespace API_AGROMG.Controllers
             editeduser.Email = user.Email;
             editeduser.Tel = user.Phone;
             editeduser.Adress = user.Adress;
-            editeduser.RoleContent = JsonConvert.SerializeObject(user.RolContent);
+            editeduser.Gender = user.Gender;
 
-            var StatusAction = await _repo.UpdateUser(editeduser, user.GenderID, user.ProfessionID);
+            var StatusAction = await _repo.UpdateUser(editeduser, user.PermissionGroupId, user.ProfessionID);
 
             if (!StatusAction)
             {
@@ -144,7 +143,7 @@ namespace API_AGROMG.Controllers
             {
                 return BadRequest("Paketinizin istifadə limitini aşmisiz");
             }
-            var logineduser = await _repo.VerifyUser(id);
+            var logineduser = await _auth.VerifyUser(id);
 
             if (await _auth.UserExists(user.Username)) return BadRequest("Username already exists");
 
@@ -164,10 +163,10 @@ namespace API_AGROMG.Controllers
                 Email =user.Email,
                 Tel = user.Phone,
                 Adress = user.Adress,
-                RoleContent = JsonConvert.SerializeObject(user.RolContent),
+                Gender = user.Gender,
                 Company = logineduser.Company
             };
-            var createStatus = await _repo.AddUser(new_user, user.GenderID, user.ProfessionID);
+            var createStatus = await _repo.AddUser(new_user, user.PermissionGroupId, user.ProfessionID);
 
             if (!createStatus)
             {

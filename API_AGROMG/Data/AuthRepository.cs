@@ -54,7 +54,7 @@ namespace API_AGROMG.Data
         }
 
         //Qeydiyyat ucun metod
-        public async Task<User> Register(Company company, User user, string password, int paketid, int genderid, List<int> proffesionid)
+        public async Task<User> Register(Company company, User user, string password, int paketid, List<int> proffesionid)
         {
             company.Packet = _context.Packets.Where(s => s.Id == paketid).FirstOrDefault();
 
@@ -66,24 +66,36 @@ namespace API_AGROMG.Data
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.Gender = _context.Genders.Where(s => s.Id == genderid).FirstOrDefault();
             user.Company = company;
 
-            List<UserPermissionDto> userPermissions = new List<UserPermissionDto>();
+            List<PermissionDto> Permissions = new List<PermissionDto>();
 
             List<string> Paketcontent = JsonConvert.DeserializeObject<List<string>>(company.Packet.Content);
 
             foreach (var item in Paketcontent)
             {
-                UserPermissionDto permosion = new UserPermissionDto()
+                PermissionDto permosion = new PermissionDto()
                 {
                     ModulKey = item,
                     CanRead = true,
-                    CanWrite = true
+                    CanWrite = true,
+                    CanEdit=true,
+                    CanDelete=true
                 };
-                userPermissions.Add(permosion);
+                Permissions.Add(permosion);
             }
-            user.RoleContent = JsonConvert.SerializeObject(userPermissions);
+
+            PermissionsGroups permission = new PermissionsGroups()
+            {
+                Name = "Admin",
+                RolContent = JsonConvert.SerializeObject(Permissions),
+                Status = true,
+                Company = company
+            };
+            await _context.PermissionsGroups.AddAsync(permission);
+            await _context.SaveChangesAsync();
+
+            user.PermissionsGroups = permission;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -122,42 +134,23 @@ namespace API_AGROMG.Data
 
         public async Task<UserDataforLoginDto> Logineduser(int id)
         {
-            User user = await _context.Users.FirstOrDefaultAsync(s=>s.Id==id);
-
-            List<UserPermissionDto> userroles= JsonConvert.DeserializeObject<List<UserPermissionDto>>(user.RoleContent);
+            User user = await _context.Users.Include(p=>p.PermissionsGroups).FirstOrDefaultAsync(s=>s.Id==id);
 
             UserDataforLoginDto loginedUser = new UserDataforLoginDto()
             {
                 UserId = user.Id,
-                UserName = user.Name
+                UserName = user.Name,
+                UserPermitions = JsonConvert.DeserializeObject<List<PermissionDto>>(user.PermissionsGroups.RolContent)
             };
 
-            foreach (var item in userroles)
-            {
-
-                var modul = await _context.Modules.Where(s => s.NumberKey == item.ModulKey).FirstOrDefaultAsync();
-
-                var modullangs = await _context.LanguageContexts.Where(s => s.Key == modul.NameKey).ToListAsync();
-                List<SimpleforDtos.LangcontentDto> modullangcontent = new List<SimpleforDtos.LangcontentDto>();
-                foreach (var lang in modullangs)
-                {
-                    modullangcontent.Add(new SimpleforDtos.LangcontentDto()
-                    {
-                        Languagename=lang.LangUnicode,
-                        Content=lang.Context
-                    });
-                }
-                UserPermissionLanguageDtos x =new UserPermissionLanguageDtos()
-                {
-                    ModulKey=item.ModulKey,
-                    CanRead=item.CanRead,
-                    CanWrite=item.CanWrite,
-                    LanguageContent= modullangcontent
-                };
-                loginedUser.UserPermissions.Add(x);
-            }
-
             return loginedUser;
+        }
+
+        public async Task<User> VerifyUser(int id)
+        {
+            var logineduser = await _context.Users.Include(s => s.Company).FirstOrDefaultAsync(s => s.Id == id);
+
+            return logineduser;
         }
     }
 }

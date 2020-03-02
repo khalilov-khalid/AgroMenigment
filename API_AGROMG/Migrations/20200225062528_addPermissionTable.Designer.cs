@@ -4,14 +4,16 @@ using API_AGROMG.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API_AGROMG.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200225062528_addPermissionTable")]
+    partial class addPermissionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,7 +154,7 @@ namespace API_AGROMG.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyId");
+                    b.Property<bool>("CanDelete");
 
                     b.Property<string>("Name");
 
@@ -161,8 +163,6 @@ namespace API_AGROMG.Migrations
                     b.Property<bool>("Status");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.ToTable("PermissionsGroups");
                 });
@@ -305,13 +305,6 @@ namespace API_AGROMG.Migrations
                     b.HasOne("API_AGROMG.Model.Packet", "Packet")
                         .WithMany()
                         .HasForeignKey("PacketId");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.PermissionsGroups", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.Technique", b =>

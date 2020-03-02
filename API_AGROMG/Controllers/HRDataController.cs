@@ -20,79 +20,46 @@ namespace API_AGROMG.Controllers
     public class HRDataController : ControllerBase
     {
         private readonly DataContext _context;
-        public HRDataController(DataContext context)
+
+        private readonly IAuthRepository _auth;
+
+        
+        public HRDataController(DataContext context, IAuthRepository auth)
         {
             _context = context;
+            _auth = auth;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetProdessionsAndGender()
+        [HttpGet("professions/{lang}")]
+        public async Task<ActionResult> GetProdessionsAndGender(string lang)
         {
-            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var professions = await _context.Professions.Where(s => s.Status == true).ToListAsync();
 
-            DataForHRDtos data = new DataForHRDtos();
 
-            var user = await _context.Users.Include(c=>c.Company).Include(s=>s.Company.Packet).FirstOrDefaultAsync(s => s.Id == id);
-
-            var packetContent = JsonConvert.DeserializeObject<List<string>>(user.Company.Packet.Content);
-
-            foreach (var item in packetContent)
+            List<StandartDto> professionList = professions.Select(s => new StandartDto()
             {
-                var modul = await _context.Modules.FirstOrDefaultAsync(s => s.NumberKey == item);
+                Id = s.Id,
+                Name = _context.LanguageContexts.FirstOrDefault(l => l.Key == s.Key && l.LangUnicode == lang).Context
+            }).ToList();
+            
+            return Ok(professionList);
+        }
 
-                var modullanglist = await _context.LanguageContexts.Where(w => w.Key == modul.NameKey).ToListAsync();
+        [HttpGet("PermissionGroup")]
+        public async Task<ActionResult> GetPermissionGroup()
+        {
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-                foreach (var lang in modullanglist)
-                {
-                    ModulDataForLanguage x = new ModulDataForLanguage()
-                    {
-                        NumberKey = modul.NumberKey,
-                        Language = lang.LangUnicode,
-                        Name = lang.Context
-                    };
-                    data.Moduls.Add(x);
-                }
-            }
+            var logineduser = await _auth.VerifyUser(id);
 
-
-            //professions
-            var professionlist = await _context.Professions.Where(s => s.Status == true).ToListAsync();
-
-            foreach (var prof in professionlist)
+            List<StandartDto> PermissionList = await _context.PermissionsGroups.Where(w=>w.Company==logineduser.Company).Select(s => new StandartDto()
             {
-                var proflanglist = await _context.LanguageContexts.Where(w => w.Key == prof.Key).ToListAsync();
+                Id = s.Id,
+                Name =s.Name
 
-                foreach (var lang in proflanglist)
-                {
-                    DataForLanguageDto x = new DataForLanguageDto()
-                    {
-                        Id = prof.Id,
-                        Language = lang.LangUnicode,
-                        Name = lang.Context
-                    };
-                    data.Professions.Add(x);
-                }
-            }
+            }).ToListAsync();
 
-
-            //Gender
-            var Genderlist = await _context.Genders.ToListAsync();
-
-            foreach (var gender in Genderlist)
-            {
-                var genderlanglist = await _context.LanguageContexts.Where(w => w.Key == gender.Key).ToListAsync();
-                foreach (var lang in genderlanglist)
-                {
-                    DataForLanguageDto y = new DataForLanguageDto()
-                    {
-                        Id = gender.Id,
-                        Language = lang.LangUnicode,
-                        Name = lang.Context
-                    };
-                    data.Genders.Add(y);
-                }
-            }
-            return Ok(data);
+            return Ok(PermissionList);
         }
     }    
 }

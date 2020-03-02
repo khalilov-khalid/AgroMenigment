@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace API_AGROMG.Dtos
 {
-    public class UserPermissionDto
+    public class PermissionGroupForReadandUpdateDto
     {
         [Required]
-        public string ModulKey { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public bool CanRead { get; set; }
+        public string Name { get; set; }
 
-        [Required]
-        public bool CanWrite { get; set; }
+        public List<PermissionDto> Permissions { get; set; }
     }
 }

@@ -29,5 +29,11 @@ namespace API_AGROMG.Data
         public DbSet<Packet> Packets { get; set; }
 
         public DbSet<Modules> Modules { get; set; }
+
+        public DbSet<TechniqueCategory> TechniqueCategories { get; set; }
+
+        public DbSet<Technique> Techniques { get; set; }
+
+        public DbSet<PermissionsGroups> PermissionsGroups { get; set; }
     }
 }

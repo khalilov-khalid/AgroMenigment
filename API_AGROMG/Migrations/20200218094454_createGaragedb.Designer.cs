@@ -4,14 +4,16 @@ using API_AGROMG.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API_AGROMG.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200218094454_createGaragedb")]
+    partial class createGaragedb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,27 +148,6 @@ namespace API_AGROMG.Migrations
                     b.ToTable("Packets");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.PermissionsGroups", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CompanyId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("RolContent");
-
-                    b.Property<bool>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("PermissionsGroups");
-                });
-
             modelBuilder.Entity("API_AGROMG.Model.Profession", b =>
                 {
                     b.Property<int>("Id")
@@ -254,7 +235,7 @@ namespace API_AGROMG.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<int>("Gender");
+                    b.Property<int?>("GenderId");
 
                     b.Property<string>("Name");
 
@@ -262,7 +243,7 @@ namespace API_AGROMG.Migrations
 
                     b.Property<byte[]>("PasswordSalt");
 
-                    b.Property<int?>("PermissionsGroupsId");
+                    b.Property<string>("RoleContent");
 
                     b.Property<decimal>("Salary");
 
@@ -276,7 +257,7 @@ namespace API_AGROMG.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("PermissionsGroupsId");
+                    b.HasIndex("GenderId");
 
                     b.ToTable("Users");
                 });
@@ -307,13 +288,6 @@ namespace API_AGROMG.Migrations
                         .HasForeignKey("PacketId");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.PermissionsGroups", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-                });
-
             modelBuilder.Entity("API_AGROMG.Model.Technique", b =>
                 {
                     b.HasOne("API_AGROMG.Model.Company", "Company")
@@ -331,9 +305,9 @@ namespace API_AGROMG.Migrations
                         .WithMany()
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("API_AGROMG.Model.PermissionsGroups", "PermissionsGroups")
+                    b.HasOne("API_AGROMG.Model.Gender", "Gender")
                         .WithMany()
-                        .HasForeignKey("PermissionsGroupsId");
+                        .HasForeignKey("GenderId");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.UserProfessions", b =>

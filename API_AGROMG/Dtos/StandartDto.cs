@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API_AGROMG.SimpleforDtos
+namespace API_AGROMG.Dtos
 {
-    public class DataForLanguageDto
+    public class StandartDto
     {
         public int Id { get; set; }
 
-        public List<LangcontentDto> LanguageContent = new List<LangcontentDto>();
-
+        public string Name { get; set; }
     }
 }

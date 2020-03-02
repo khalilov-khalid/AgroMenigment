@@ -8,9 +8,10 @@ namespace API_AGROMG.Dtos
 {
     public class DataForRegisterDtos
     {
-        public  List<DataForLanguageDto> Professions = new List<DataForLanguageDto>();
+        public List<DataForLanguageDto> Packets = new List<DataForLanguageDto>();
 
-        public List<DataForLanguageDto> Genders = new List<DataForLanguageDto>();
+        public List<DataForLanguageDto> Professions = new List<DataForLanguageDto>();
+
                 
     }
 }

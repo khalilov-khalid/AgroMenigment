@@ -11,6 +11,6 @@ namespace API_AGROMG.Dtos
 
         public string UserName { get; set; }
 
-        public List<UserPermissionLanguageDtos> UserPermissions = new List<UserPermissionLanguageDtos>();
+        public List<PermissionDto> UserPermitions { get; set; }
     }
 }

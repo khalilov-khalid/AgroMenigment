@@ -45,7 +45,7 @@ namespace API_AGROMG.Dtos
         public string UserTel { get; set; }
 
         [Required]
-        public int UserGenderID { get; set; }
+        public int UserGender { get; set; }
 
         [Required]
         public List<int> UserProfessionID { get; set; }

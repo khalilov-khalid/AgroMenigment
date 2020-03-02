@@ -36,12 +36,12 @@ namespace API_AGROMG.Dtos
         public string Adress { get; set; }
 
         [Required]
-        public int GenderID { get; set; }
+        public int Gender { get; set; }
 
         [Required]
         public List<int> ProfessionID { get; set; }
 
-        public List<UserPermissionDto> RolContent { get; set; }
+        public int PermissionGroupId { get; set; }
 
     }
 }

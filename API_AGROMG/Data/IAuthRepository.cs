@@ -9,7 +9,7 @@ namespace API_AGROMG.Data
 {
     public interface IAuthRepository
     {
-        Task<User> Register(Company company, User user, string password, int paketid, int genderid,List<int> proffesionid);
+        Task<User> Register(Company company, User user, string password, int paketid, List<int> proffesionid);
 
         Task<User> Login(string username, string password);
 
@@ -19,5 +19,7 @@ namespace API_AGROMG.Data
         Task<bool> UserExists(string username);
 
         Task<UserDataforLoginDto> Logineduser(int id);
+
+        Task<User> VerifyUser(int id);
     }
 }

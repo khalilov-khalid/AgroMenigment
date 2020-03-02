@@ -21,8 +21,6 @@ namespace API_AGROMG.Model
 
         public bool AdminStatus { get; set; }
 
-        public string RoleContent { get; set; }
-
         public string Adress { get; set; }
 
         public string Email { get; set; }
@@ -35,6 +33,8 @@ namespace API_AGROMG.Model
 
         public Company Company { get; set; }
 
-        public Gender Gender { get; set; }
+        public int Gender { get; set; }
+
+        public PermissionsGroups PermissionsGroups { get; set; }
     }
 }

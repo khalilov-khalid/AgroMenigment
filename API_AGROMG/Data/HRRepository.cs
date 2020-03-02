@@ -13,18 +13,11 @@ namespace API_AGROMG.Data
         public HRRepository(DataContext context)
         {
             _context = context;
-        }
-
-        public async Task<User> VerifyUser(int id)
-        {
-            var logineduser = await _context.Users.Include(s=>s.Company).FirstOrDefaultAsync(s => s.Id == id);
-            
-            return logineduser;
-        }
+        }        
 
         public async Task<List<User>> GetUsers(int id)
         {
-            var logineduser = await _context.Users.Include(t=>t.Company).Include(g=>g.Gender).FirstOrDefaultAsync(s => s.Id == id);
+            var logineduser = await _context.Users.Include(t=>t.Company).FirstOrDefaultAsync(s => s.Id == id);
 
             var users = await _context.Users.Where(s => s.Status == true && s.Company == logineduser.Company).ToListAsync();
 
@@ -34,7 +27,7 @@ namespace API_AGROMG.Data
 
         public async Task<User> GetUser(int id)
         {
-            var user = await _context.Users.Include(g => g.Gender).FirstOrDefaultAsync(s => s.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(s => s.Id == id);
 
             return user;
         }
@@ -52,10 +45,9 @@ namespace API_AGROMG.Data
             return ListofProfID;
         }
 
-        public async Task<bool> AddUser(User user, int genderId, List<int> ProfsID)
+        public async Task<bool> AddUser(User user, int GroupId, List<int> ProfsID)
         {
-            user.Gender = await _context.Genders.FirstOrDefaultAsync(s => s.Id == genderId);
-            
+            user.PermissionsGroups = await _context.PermissionsGroups.FirstOrDefaultAsync(s => s.Id == GroupId);
             try
             {
                 await _context.Users.AddAsync(user);
@@ -85,9 +77,9 @@ namespace API_AGROMG.Data
             return true;
         }
 
-        public async Task<bool> UpdateUser(User user, int genderID, List<int> ProfsID)
+        public async Task<bool> UpdateUser(User user, int GroupId, List<int> ProfsID)
         {
-            user.Gender = await _context.Genders.FirstOrDefaultAsync(s => s.Id == genderID);
+            user.PermissionsGroups = await _context.PermissionsGroups.FirstOrDefaultAsync(s => s.Id == GroupId);
             try
             {
                 _context.Entry(user).State = EntityState.Modified;
