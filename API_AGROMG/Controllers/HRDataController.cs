@@ -31,9 +31,12 @@ namespace API_AGROMG.Controllers
         }
 
         [HttpGet("professions/{lang}")]
-        public async Task<ActionResult> GetProdessionsAndGender(string lang)
+        public async Task<ActionResult> GetProdessions(string lang)
         {
-            var professions = await _context.Professions.Where(s => s.Status == true).ToListAsync();
+            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var logineduser = await _auth.VerifyUser(id);
+
+            var professions = await _context.Professions.Where(s => s.Status == true && s.Company== logineduser.Company).ToListAsync();
 
 
             List<StandartDto> professionList = professions.Select(s => new StandartDto()

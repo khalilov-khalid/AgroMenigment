@@ -35,5 +35,43 @@ namespace API_AGROMG.Data
         public DbSet<Technique> Techniques { get; set; }
 
         public DbSet<PermissionsGroups> PermissionsGroups { get; set; }
+
+        public DbSet<MainIngredient> MainIngredients { get; set; }
+
+        public DbSet<NameOfDrug> NameOfDrugs { get; set; }
+
+        public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
+
+        public DbSet<WareHouseCategory> WareHouseCategories { get; set; }
+
+        public DbSet<WareHourse> WareHourses { get; set; }
+
+        public DbSet<MedicalStock> MedicalStock { get; set; }
+
+        public DbSet<CropCategory> CropCategories { get; set; }
+
+        public DbSet<CropCategoryLanguage> CropCategoryLanguages { get; set; }
+
+        public DbSet<Crops> Crops { get; set; }
+
+        public DbSet<CropLanguage> CropLanguages { get; set; }
+
+        public DbSet<ParcelCategory> ParcelCategories { get; set; }
+
+        public DbSet<ParcelCategoryLanguage> ParcelCategoryLanguages { get; set; }
+
+        public DbSet<Parcel> Parcels { get; set; }
+
+        public DbSet<Model.Action> Actions { get; set; }
+
+        public DbSet<ActionLanguange> ActionLanguanges { get; set; }
+
+        public DbSet<WorkPlan> WorkPlans { get; set; }
+
+        public DbSet<WorkPlanTask> WorkPlanTasks { get; set; }
+
+        public DbSet<WorkPlanActionLog> WorkPlanActionLogs { get; set; }
+
+        public DbSet<WorkPlanTaskActionLog> WorkPlanTaskActionLogs { get; set; }
     }
 }

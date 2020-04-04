@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API_AGROMG.Data;
 using API_AGROMG.Dtos;
@@ -20,21 +21,27 @@ namespace API_AGROMG.Controllers
     {
         private readonly DataContext _context;
 
-        public ProfessionController(DataContext context)
+        private readonly IAuthRepository _auth;
+
+        public ProfessionController(DataContext context, IAuthRepository auth)
         {
             _context = context;
+            _auth = auth;
         }
 
         //get profession list
-        [HttpGet]
-        public async Task<ActionResult> GetProdessionsForAdmin()
+        [HttpGet("{Lang}")]
+        public async Task<ActionResult> GetProdessionsForAdmin(string lang)
         {
+            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var professions = await _context.Professions.Where(x => x.Status == true).Select(s => new Profession
+            var logineduser = await _auth.VerifyUser(id);
+
+            List<ProfessionForReadDto> professions = await _context.Professions.Where(x => x.Status == true && x.Company ==logineduser.Company).Select(s => new ProfessionForReadDto
             {
                 Id = s.Id,
-                Key = _context.LanguageContexts.Where(w => w.LangUnicode == "az" && w.Key == s.Key).FirstOrDefault().Context,
-                ShowStatus =s.ShowStatus
+                Name = _context.LanguageContexts.Where(w => w.LangUnicode == lang && w.Key == s.Key).FirstOrDefault().Context,
+                Respondent =s.Respondent
             }).ToListAsync();
 
             return Ok(professions);
@@ -44,12 +51,17 @@ namespace API_AGROMG.Controllers
         [HttpPost]
         public async Task<ActionResult> ProfessionCreate([FromBody]ProfessionsDtos professions)
         {
-            
+
+            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var logineduser = await _auth.VerifyUser(id);
+
             Profession newProfession = new Profession()
             {
                 Key = DateTime.Now.ToString().GetHashCode().ToString("x"),
-                ShowStatus = professions.Showstatus,
+                Respondent = professions.Respondent,
                 Status = true,
+                Company = logineduser.Company
             };
             _context.Professions.Add(newProfession);
             await _context.SaveChangesAsync();
@@ -77,7 +89,7 @@ namespace API_AGROMG.Controllers
         }
 
         //get one profession for edir
-        [HttpGet("{id}")]
+        [HttpGet("{lang}/{id}")]
         public async Task<ActionResult> GetProfessionsForEdir(int id)
         {
             var profession = await _context.Professions.FirstOrDefaultAsync(s => s.Id == id);
@@ -97,7 +109,7 @@ namespace API_AGROMG.Controllers
             ProfessionsDtos prop = new ProfessionsDtos()
             {
                 Id = profession.Id,
-                Showstatus=profession.ShowStatus,
+                Respondent=profession.Respondent,
                 Content = langcontent
             };
 
@@ -121,7 +133,7 @@ namespace API_AGROMG.Controllers
                 return NotFound();
             }
 
-            prof.ShowStatus = profession.Showstatus;
+            prof.Respondent = profession.Respondent;
             prof.Key = prof.Key;
             prof.Status = prof.Status;
             _context.Entry(prof).State = EntityState.Modified;

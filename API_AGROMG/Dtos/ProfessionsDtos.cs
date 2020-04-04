@@ -10,7 +10,7 @@ namespace API_AGROMG.Dtos
     {
         public int Id { get; set; }
 
-        public bool Showstatus { get; set; }
+        public bool Respondent { get; set; }
 
         public List<LangcontentDto> Content { get; set; }
     }

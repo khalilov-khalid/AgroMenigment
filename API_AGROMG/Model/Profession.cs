@@ -11,8 +11,10 @@ namespace API_AGROMG.Model
 
         public string Key { get; set; }
 
-        public bool ShowStatus { get; set; }
+        public bool Respondent { get; set; }
 
         public bool Status { get; set; }
+
+        public Company Company { get; set; }
     }
 }

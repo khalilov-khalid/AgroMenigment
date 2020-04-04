@@ -54,7 +54,7 @@ namespace API_AGROMG.Data
         }
 
         //Qeydiyyat ucun metod
-        public async Task<User> Register(Company company, User user, string password, int paketid, List<int> proffesionid)
+        public async Task<User> Register(Company company, User user, string password, int paketid)
         {
             company.Packet = _context.Packets.Where(s => s.Id == paketid).FirstOrDefault();
 
@@ -99,17 +99,6 @@ namespace API_AGROMG.Data
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-
-            foreach (var item in proffesionid)
-            {
-                UserProfessions userProfessions = new UserProfessions();
-                userProfessions.User = user;
-                userProfessions.Profession = await _context.Professions.Where(s => s.Id == item).FirstOrDefaultAsync();
-
-                await _context.UserProfessions.AddAsync(userProfessions);
-                await _context.SaveChangesAsync();
-            }
-
             return user;
         }
 

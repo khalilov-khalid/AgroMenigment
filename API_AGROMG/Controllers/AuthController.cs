@@ -105,7 +105,7 @@ namespace API_AGROMG.Controllers
                 Gender =userForRegisterDto.UserGender
             };
 
-            var createdUser = await _repo.Register(companyToCreate, userToCreate, userForRegisterDto.UserPassword, userForRegisterDto.PacketId, userForRegisterDto.UserProfessionID);
+            var createdUser = await _repo.Register(companyToCreate, userToCreate, userForRegisterDto.UserPassword, userForRegisterDto.PacketId);
 
             var claims = new[]
             {

@@ -67,11 +67,6 @@ namespace API_AGROMG.Controllers
             {
                 return NotFound();
             }
-
-            if (user.AdminStatus==false)
-            {
-                return BadRequest("Bu eməliyyatı yerine yetirmek üçün icazəniz yoxdur");
-            }
             UserForEditDtos compamyUsers = new UserForEditDtos()
             {
                 ID = user.Id,
@@ -95,11 +90,7 @@ namespace API_AGROMG.Controllers
         {
             if (id != user.ID)
             {
-                return BadRequest();
-            }
-            if (user.AdminStatus == false)
-            {
-                return BadRequest("Bu eməliyyatı yerine yetirmek üçün icazəniz yoxdur");
+                return BadRequest("Datada Sehvlik var");
             }
             var editeduser = await _repo.GetUser(user.ID);
 
@@ -116,7 +107,7 @@ namespace API_AGROMG.Controllers
 
             if (!StatusAction)
             {
-                return BadRequest();
+                return BadRequest("Emeliyyat ugursuz");
             }
 
             return Ok();
