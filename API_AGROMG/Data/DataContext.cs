@@ -18,11 +18,12 @@ namespace API_AGROMG.Data
 
         public DbSet<Company> Companies { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Workers> Workers { get; set; }
 
         public DbSet<Profession> Professions { get; set; }
+        public DbSet<ProfessionLanguange> ProfessionLanguanges { get; set; }
 
-        public DbSet<UserProfessions> UserProfessions { get; set; }
+        public DbSet<WorkerProfessions> WorkerProfessions { get; set; }
 
         public DbSet<Gender> Genders { get; set; }
 
@@ -30,17 +31,15 @@ namespace API_AGROMG.Data
 
         public DbSet<Modules> Modules { get; set; }
 
-        public DbSet<TechniqueCategory> TechniqueCategories { get; set; }
-
-        public DbSet<Technique> Techniques { get; set; }
-
         public DbSet<PermissionsGroups> PermissionsGroups { get; set; }
 
         public DbSet<MainIngredient> MainIngredients { get; set; }
 
-        public DbSet<NameOfDrug> NameOfDrugs { get; set; }
+        public DbSet<Fertilizer> Fertilizer { get; set; }
 
         public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
+
+        public DbSet<MeasurementUnitLanguage> MeasurementUnitLanguage { get; set; }
 
         public DbSet<WareHouseCategory> WareHouseCategories { get; set; }
 
@@ -73,5 +72,42 @@ namespace API_AGROMG.Data
         public DbSet<WorkPlanActionLog> WorkPlanActionLogs { get; set; }
 
         public DbSet<WorkPlanTaskActionLog> WorkPlanTaskActionLogs { get; set; }
+
+        public DbSet<Users> Users { get; set; }
+
+        public DbSet<WorkerSalary> WorkerSalaries { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryOperationKind> TemporaryOperationKind { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryAccountKind> TemporaryAccountKind { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryCustomer> TemporaryCustomer { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryPayAccount> TemporaryPayAccount { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryParcel> TemporaryParcel { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryInAndOutItems> TemporaryInAndOutItems { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporaryExsel> TemporaryExsel { get; set; }
+
+        public DbSet<API_AGROMG.Model.TemporarySector> TemporarySector { get; set; }
+
+        public DbSet<FertilizerKind> FertilizerKind { get; set; }
+
+        public DbSet<FertilizerKindLanguage> FertilizerKindLanguage { get; set; }
+
+        public DbSet<Country> Country { get; set; }
+
+        public DbSet<CountryLanguage> CountryLanguage { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<Demand> Demands { get; set; }
+
+
+
+
+
     }
 }

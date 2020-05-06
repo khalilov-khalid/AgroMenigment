@@ -9,8 +9,6 @@ namespace API_AGROMG.Model
     {
         public int Id { get; set; }
 
-        public string Key { get; set; }
-
         public bool Respondent { get; set; }
 
         public bool Status { get; set; }

@@ -11,22 +11,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="API_AGROMG.deps.json">
-      <publishTime>04/04/2020 07:29:45</publishTime>
+      <publishTime>05/06/2020 19:15:22</publishTime>
     </File>
     <File Include="API_AGROMG.dll">
-      <publishTime>04/04/2020 07:22:13</publishTime>
+      <publishTime>05/06/2020 19:12:56</publishTime>
     </File>
     <File Include="API_AGROMG.pdb">
-      <publishTime>04/04/2020 07:22:13</publishTime>
+      <publishTime>05/06/2020 19:12:56</publishTime>
     </File>
     <File Include="API_AGROMG.runtimeconfig.json">
-      <publishTime>01/22/2020 18:53:02</publishTime>
+      <publishTime>04/28/2020 14:31:31</publishTime>
     </File>
     <File Include="appsettings.Development.json">
       <publishTime>12/09/2019 12:43:22</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>02/24/2020 12:18:53</publishTime>
+      <publishTime>04/22/2020 15:36:06</publishTime>
     </File>
     <File Include="Controllers/ProfessionController.cs">
       <publishTime>11/29/2019 15:58:05</publishTime>
@@ -137,7 +137,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/15/2018 13:29:52</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>04/04/2020 07:29:45</publishTime>
+      <publishTime>05/06/2020 19:15:22</publishTime>
     </File>
   </ItemGroup>
 </Project>

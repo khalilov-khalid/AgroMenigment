@@ -31,13 +31,11 @@ namespace API_AGROMG.Controllers
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(id);
 
-            var professions = await _context.Professions.Where(s => s.Status == true && s.Company == logineduser.Company && s.Respondent == true).ToListAsync();
-
-            List<StandartDto> professionList = professions.Select(s => new StandartDto()
+            List<StandartDto> professionList = await _context.ProfessionLanguanges.Where(s => s.Profession.Status == true && s.Profession.Company == logineduser.Company && s.Language.code == lang).Select(s => new StandartDto()
             {
-                Id = s.Id,
-                Name = _context.LanguageContexts.FirstOrDefault(l => l.Key == s.Key && l.LangUnicode == lang).Context
-            }).ToList();
+                Id = s.Profession.Id,
+                Name = s.Name
+            }).ToListAsync();
 
             return Ok(professionList);
         }
@@ -48,10 +46,10 @@ namespace API_AGROMG.Controllers
             int userid = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(userid);
 
-            List<StandartDto> datalist = await _context.UserProfessions.Where(s => s.Profession.Id == id && s.User.Company == logineduser.Company).Select(s => new StandartDto()
+            List<StandartDto> datalist = await _context.WorkerProfessions.Where(s => s.Profession.Id == id && s.Workers.Company == logineduser.Company).Select(s => new StandartDto()
             {
-                Id = s.User.Id,
-                Name = s.User.Name
+                Id = s.Workers.Id,
+                Name = s.Workers.Name
             }).ToListAsync();
 
             return Ok(datalist);

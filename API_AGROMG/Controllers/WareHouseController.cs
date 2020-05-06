@@ -71,7 +71,7 @@ namespace API_AGROMG.Controllers
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(id);
 
-            List<StandartByCategoryDto> datalist = await _context.WareHourses.Where(s => s.Status == true && s.Language.code == lang && s.Company == logineduser.Company).Select(s => new StandartByCategoryDto()
+            List<StandartByCategoryReadDto> datalist = await _context.WareHourses.Where(s => s.Status == true && s.Language.code == lang && s.Company == logineduser.Company).Select(s => new StandartByCategoryReadDto()
             {
                 Id=s.MainId,
                 Name=s.Name,

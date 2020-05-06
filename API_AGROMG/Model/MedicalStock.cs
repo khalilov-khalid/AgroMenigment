@@ -12,7 +12,7 @@ namespace API_AGROMG.Model
 
         public decimal Count { get; set; }
 
-        public NameOfDrug NameOfDrug { get; set; }
+        public Fertilizer Fertilizer { get; set; }
 
         public int WareHourse { get; set; }
 

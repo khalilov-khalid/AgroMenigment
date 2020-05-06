@@ -30,7 +30,7 @@ namespace API_AGROMG.Controllers
         [HttpGet("{barcode}")]
         public async Task<ActionResult> GetStockData(int barcode)
         {
-            var data = await _context.MedicalStock.Include(s=>s.NameOfDrug).FirstOrDefaultAsync(s => s.Barcode == barcode);
+            var data = await _context.MedicalStock.Include(s=>s.Fertilizer).FirstOrDefaultAsync(s => s.Barcode == barcode);
 
             if (data == null)
             {
@@ -42,7 +42,7 @@ namespace API_AGROMG.Controllers
                 Id = data.Id,
                 Barcode = data.Barcode,
                 Count = data.Count,
-                NameOfDrug = data.NameOfDrug.Id,
+                NameOfDrug = data.Fertilizer.Id,
                 WareHourse = data.WareHourse,
                 Expirydate = data.Expirydate,
             };
@@ -66,7 +66,7 @@ namespace API_AGROMG.Controllers
                 {
                     Barcode = dto.Barcode,
                     Count = dto.Count,
-                    NameOfDrug = await _context.NameOfDrugs.FirstOrDefaultAsync(s => s.Id == dto.NameOfDrug),
+                    Fertilizer = await _context.Fertilizer.FirstOrDefaultAsync(s => s.Id == dto.NameOfDrug),
                     WareHourse = dto.WareHourse,
                     Expirydate = dto.Expirydate,
                     Company = logineduser.Company
@@ -90,10 +90,10 @@ namespace API_AGROMG.Controllers
         {
             foreach (var item in dto)
             {
-                var data = await _context.MedicalStock.Include(s => s.NameOfDrug).FirstOrDefaultAsync(s => s.Barcode == item.Barcode);
+                var data = await _context.MedicalStock.Include(s => s.Fertilizer).FirstOrDefaultAsync(s => s.Barcode == item.Barcode);
                 if (data.Count < item.Count)
                 {
-                    return BadRequest("Anbarda " + data.NameOfDrug.Name + " adlı  mal üçün daxil edilən qədər mal yoxdur");
+                    return BadRequest("Anbarda " + data.Fertilizer.Name + " adlı  mal üçün daxil edilən qədər mal yoxdur");
                 }
                 else
                 {
@@ -121,13 +121,13 @@ namespace API_AGROMG.Controllers
 
             var logineduser = await _auth.VerifyUser(id);
 
-            List<MedicalListForStockDto> datalist = await _context.MedicalStock.Include(s=>s.NameOfDrug).Where(s => s.Company ==logineduser.Company).Select(s => new MedicalListForStockDto()
+            List<MedicalListForStockDto> datalist = await _context.MedicalStock.Include(s=>s.Fertilizer).Where(s => s.Company ==logineduser.Company).Select(s => new MedicalListForStockDto()
             {
-                Category=s.NameOfDrug.Category,
-                Name =s.NameOfDrug.Name,
-                MainIngredients = s.NameOfDrug.MainIngredient.Name,
+                Category=s.Fertilizer.Category,
+                Name =s.Fertilizer.Name,
+                MainIngredients = s.Fertilizer.MainIngredient.Name,
                 Count = s.Count,
-                MeasurementUnit = _context.MeasurementUnits.FirstOrDefault(w=>w.MainId == s.NameOfDrug.MeasurementUnit && w.Language.code==lang).Name,
+                MeasurementUnit = _context.MeasurementUnits.FirstOrDefault(w=>w.Id == s.Fertilizer.MeasurementUnit).Id.ToString(),
                 Expirydate = s.Expirydate
 
             }).ToListAsync();

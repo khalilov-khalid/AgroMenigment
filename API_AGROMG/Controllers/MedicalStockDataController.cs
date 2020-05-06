@@ -34,7 +34,7 @@ namespace API_AGROMG.Controllers
 
             var logineduser = await _auth.VerifyUser(id);
 
-            List<StandartDto> datalist = await _context.NameOfDrugs.Where(s => s.Category == CategoryId && s.Status==true && s.Company ==logineduser.Company).Select(s => new StandartDto()
+            List<StandartDto> datalist = await _context.Fertilizer.Where(s => s.Category == CategoryId && s.Status==true && s.Company ==logineduser.Company).Select(s => new StandartDto()
             {
                 Id =s.Id,
                 Name= s.Name

@@ -9,10 +9,6 @@ namespace API_AGROMG.Model
     {
         public int Id { get; set; }
 
-        public int MainId { get; set; }
-
-        public string Name { get; set; }
-
-        public Language Language { get; set; }
+        public ICollection<MeasurementUnitLanguage> MeasurementUnitLanguage { get; set; }
     }
 }

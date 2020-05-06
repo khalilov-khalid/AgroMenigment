@@ -11,6 +11,6 @@ namespace API_AGROMG.Dtos
 
         public string Name { get; set; }
 
-        public string Category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

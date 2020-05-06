@@ -36,14 +36,11 @@ namespace API_AGROMG.Controllers
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(id);
 
-            var professions = await _context.Professions.Where(s => s.Status == true && s.Company== logineduser.Company).ToListAsync();
-
-
-            List<StandartDto> professionList = professions.Select(s => new StandartDto()
+            List<StandartDto> professionList = await _context.ProfessionLanguanges.Where(s => s.Profession.Status == true && s.Profession.Company == logineduser.Company && s.Language.code == lang).Select(s => new StandartDto()
             {
-                Id = s.Id,
-                Name = _context.LanguageContexts.FirstOrDefault(l => l.Key == s.Key && l.LangUnicode == lang).Context
-            }).ToList();
+                Id = s.Profession.Id,
+                Name = s.Name
+            }).ToListAsync();
             
             return Ok(professionList);
         }

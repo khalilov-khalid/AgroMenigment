@@ -61,7 +61,7 @@ namespace API_AGROMG.Controllers
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(id);
 
-            List<StandartByCategoryDto> datalist = await _context.CropLanguages.Where(s => s.Language.code == lang && s.Crops.Status == true).Select(s => new StandartByCategoryDto()
+            List<StandartByCategoryReadDto> datalist = await _context.CropLanguages.Where(s => s.Language.code == lang && s.Crops.Status == true).Select(s => new StandartByCategoryReadDto()
             {
                 Id = s.Crops.Id,
                 Name = s.Name,

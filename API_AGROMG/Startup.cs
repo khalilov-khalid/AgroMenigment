@@ -34,9 +34,7 @@ namespace API_AGROMG
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IHRRepository, HRRepository>();
             services.AddScoped<ILanguageRepository, LanguageRepository>();
-            services.AddScoped<IPremissionGroupRepository, PremissionGroupRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters

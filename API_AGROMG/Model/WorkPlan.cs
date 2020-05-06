@@ -19,9 +19,9 @@ namespace API_AGROMG.Model
 
         public Action Action { get; set; }
 
-        public User Respondent { get; set; }
+        public Workers Respondent { get; set; }
 
-        public User Created { get; set; }
+        public Workers Created { get; set; }
 
         public Company Company { get; set; }
 

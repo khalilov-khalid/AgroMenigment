@@ -37,11 +37,11 @@ namespace API_AGROMG.Controllers
 
             var logineduser = await _auth.VerifyUser(id);
 
-            List<ProfessionForReadDto> professions = await _context.Professions.Where(x => x.Status == true && x.Company ==logineduser.Company).Select(s => new ProfessionForReadDto
+            List<ProfessionForReadDto> professions = await _context.ProfessionLanguanges.Where(x => x.Profession.Status == true && x.Profession.Company ==logineduser.Company && x.Language.code == lang).Select(s => new ProfessionForReadDto
             {
                 Id = s.Id,
-                Name = _context.LanguageContexts.Where(w => w.LangUnicode == lang && w.Key == s.Key).FirstOrDefault().Context,
-                Respondent =s.Respondent
+                Name = s.Name,
+                Respondent =s.Profession.Respondent
             }).ToListAsync();
 
             return Ok(professions);
@@ -58,7 +58,6 @@ namespace API_AGROMG.Controllers
 
             Profession newProfession = new Profession()
             {
-                Key = DateTime.Now.ToString().GetHashCode().ToString("x"),
                 Respondent = professions.Respondent,
                 Status = true,
                 Company = logineduser.Company
@@ -75,13 +74,13 @@ namespace API_AGROMG.Controllers
 
             foreach (var item in professions.Content)
             {
-                LanguageContext newContent = new LanguageContext()
+                ProfessionLanguange professionLang = new ProfessionLanguange()
                 {
-                    Key = newProfession.Key,
-                    LangUnicode = item.Languagename,
-                    Context = item.Content
+                    Name = item.Content,
+                    Language = await _context.Languages.FirstOrDefaultAsync(s => s.code == item.Languagename),
+                    Profession = newProfession
                 };
-                _context.LanguageContexts.Add(newContent);
+                _context.ProfessionLanguanges.Add(professionLang);
                 await _context.SaveChangesAsync();
             }
 
@@ -99,18 +98,15 @@ namespace API_AGROMG.Controllers
                 return NotFound();
             }
 
-            List<LangcontentDto> langcontent = await _context.LanguageContexts.Where(s => s.Key == profession.Key).Select(s=> new LangcontentDto
-            {
-                Languagename=s.LangUnicode,
-                Content=s.Context
-
-            }).ToListAsync();
-
             ProfessionsDtos prop = new ProfessionsDtos()
             {
                 Id = profession.Id,
-                Respondent=profession.Respondent,
-                Content = langcontent
+                Respondent = profession.Respondent,
+                Content = _context.ProfessionLanguanges.Where(w => w.Profession == profession).Select(w => new SimpleforDtos.LangcontentDto()
+                {
+                    Languagename = w.Language.code,
+                    Content = w.Name
+                }).ToList()
             };
 
             return Ok(prop);
@@ -123,7 +119,7 @@ namespace API_AGROMG.Controllers
         {
             if (id != profession.Id)
             {
-                return BadRequest();
+                return BadRequest("Idler duzgun deyil");
             }
 
             var prof = await _context.Professions.FirstOrDefaultAsync(s => s.Id == id);
@@ -134,10 +130,7 @@ namespace API_AGROMG.Controllers
             }
 
             prof.Respondent = profession.Respondent;
-            prof.Key = prof.Key;
-            prof.Status = prof.Status;
             _context.Entry(prof).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -146,39 +139,13 @@ namespace API_AGROMG.Controllers
             {
                 throw;
             }
-              
-            var deletetcontent = await _context.LanguageContexts.Where(s => s.Key == prof.Key).ToListAsync();
 
-            foreach (var item in deletetcontent)
+            foreach (var item in profession.Content)
             {
-                _context.LanguageContexts.Remove(item);
+                var professionLanguange = await _context.ProfessionLanguanges.FirstOrDefaultAsync(s => s.Profession == prof && s.Language.code == item.Languagename);
+                professionLanguange.Name = item.Content;
+                _context.Entry(professionLanguange).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-            }
-
-            for (int i = 0; i < profession.Content.Count; i++)
-            {
-                LanguageContext newContent = new LanguageContext()
-                {
-                    Key = prof.Key,
-                    LangUnicode = profession.Content[i].Languagename,
-                    Context = profession.Content[i].Content
-                };
-                _context.LanguageContexts.Add(newContent);
-            }
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProfessionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
             }
 
 

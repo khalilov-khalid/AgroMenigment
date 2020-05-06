@@ -20,7 +20,6 @@ C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROM
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\bin\Release\netcoreapp2.2\API_AGROMG.runtimeconfig.dev.json
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\bin\Release\netcoreapp2.2\API_AGROMG.dll
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\bin\Release\netcoreapp2.2\API_AGROMG.pdb
-C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.csprojAssemblyReference.cache
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.RazorAssemblyInfo.cache
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.RazorAssemblyInfo.cs
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.AssemblyInfoInputs.cache
@@ -28,3 +27,4 @@ C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROM
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.RazorTargetAssemblyInfo.cache
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.dll
 C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.pdb
+C:\Users\xalid.xalilov\Desktop\WorkProject\AgroManigment\AgroMenigment\API_AGROMG\obj\Release\netcoreapp2.2\API_AGROMG.csprojAssemblyReference.cache

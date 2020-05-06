@@ -45,10 +45,22 @@ namespace API_AGROMG.Controllers
         [HttpGet("MeasurementUnit/{lang}")]
         public async Task<ActionResult> GetMeasurementUnit(string lang)
         {
-            List<StandartDto> datalist = await _context.MeasurementUnits.Where(s => s.Language.code == lang).Select(s => new StandartDto()
+            List<StandartDto> datalist = await _context.MeasurementUnitLanguage.Where(s => s.Language.code == lang).Select(s => new StandartDto()
             {
-                Id=s.MainId,
-                Name=s.Name
+                Id = s.MeasurementUnit.Id,
+                Name = s.Name
+            }).ToListAsync();
+
+            return Ok();
+        }        
+
+        [HttpGet("FertilizerKind/{lang}")]
+        public async Task<ActionResult> GetFertilizerKind(string lang)
+        {
+            List<StandartDto> datalist = await _context.FertilizerKindLanguage.Where(s => s.Language.code == lang).Select(s => new StandartDto()
+            {
+                Id = s.FertilizerKind.Id,
+                Name = s.Name
             }).ToListAsync();
 
             return Ok(datalist);

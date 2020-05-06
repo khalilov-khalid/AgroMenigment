@@ -10,6 +10,7 @@ using API_AGROMG.Dtos;
 using API_AGROMG.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -24,9 +25,11 @@ namespace API_AGROMG.Controllers
 
         private readonly IConfiguration _config;
 
+        private readonly DataContext _context;        
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(DataContext context,IAuthRepository repo, IConfiguration config)
         {
+            _context = context;
             _config = config;
             _repo = repo;
         }
@@ -34,7 +37,7 @@ namespace API_AGROMG.Controllers
         [HttpPost("adminlogin")]
         public async Task<IActionResult> AdminLogin(UserForLoginDto userForLoginDto)
         {
-            var userFormRepo = await _repo.AdminLogin(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+            var userFormRepo = await _context.Admins.FirstOrDefaultAsync(x => x.Username == userForLoginDto.Username.ToLower() && x.Password == userForLoginDto.Password);
 
             if (userFormRepo == null) return Unauthorized();
 
@@ -80,32 +83,53 @@ namespace API_AGROMG.Controllers
 
             if (await _repo.UserExists(userForRegisterDto.UserUsername)) return BadRequest("Username already exists");
 
-            var companyToCreate = new Company
+            Company New_Company = new Company()
             {
                 Name = userForRegisterDto.CompanyName,
-                Address=userForRegisterDto.CompanyAdress,
-                Email= userForRegisterDto.CompanyEmail,
-                Tel= JsonConvert.SerializeObject(userForRegisterDto.CompanyTel),
-                HumanCount=1,
-                Status=true,
-                StatusFinishDate= userForRegisterDto.PaymentEndDate,                
+                Address = userForRegisterDto.CompanyAdress,
+                Email = userForRegisterDto.CompanyEmail,
+                Tel = JsonConvert.SerializeObject(userForRegisterDto.CompanyTel),
+                HumanCount = 1,
+                Status = true,
+                StatusFinishDate = userForRegisterDto.PaymentEndDate,
+                Packet = _context.Packets.Where(s => s.Id == userForRegisterDto.PacketId).FirstOrDefault()
             };
+            await _context.Companies.AddAsync(New_Company);
+            await _context.SaveChangesAsync();
 
-            var userToCreate = new User
+
+            Workers New_Worker = new Workers()
             {
-                Name=userForRegisterDto.UserName,
-                Username = userForRegisterDto.UserUsername,
-                Adress= userForRegisterDto.UserAdress,
+                Name = userForRegisterDto.UserName,
+                Adress = userForRegisterDto.UserAdress,
                 Birthday = userForRegisterDto.UserBirthday,
-                Status=true,
-                AdminStatus=true,
-                Salary=0,
+                Status = true,
                 Email = userForRegisterDto.UserEmail,
-                Tel =userForRegisterDto.UserTel,
-                Gender =userForRegisterDto.UserGender
+                Tel = userForRegisterDto.UserTel,
+                Gender = userForRegisterDto.UserGender,
+                Company = New_Company
+            };
+            await _context.Workers.AddAsync(New_Worker);
+            await _context.SaveChangesAsync();
+
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(userForRegisterDto.UserPassword, out passwordHash, out passwordSalt);
+            Users new_user = new Users()
+            {
+                Workers = New_Worker,
+                Username = userForRegisterDto.UserUsername,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                PermissionsGroups = await _context.PermissionsGroups.FirstOrDefaultAsync(s => s.Company == null),
+                Status =true                
             };
 
-            var createdUser = await _repo.Register(companyToCreate, userToCreate, userForRegisterDto.UserPassword, userForRegisterDto.PacketId);
+            await _context.Users.AddAsync(new_user);
+            await _context.SaveChangesAsync();
+
+
+            var createdUser = new_user;
+
 
             var claims = new[]
             {
@@ -127,7 +151,7 @@ namespace API_AGROMG.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new { token = tokenHandler.WriteToken(token)});
+            return Ok(new { token = tokenHandler.WriteToken(token) });
         }
 
         [HttpPost("Login")]
@@ -157,7 +181,7 @@ namespace API_AGROMG.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new { token = tokenHandler.WriteToken(token)});
+            return Ok(new { token = tokenHandler.WriteToken(token) });
         }
 
         [Authorize]
@@ -166,14 +190,28 @@ namespace API_AGROMG.Controllers
         {
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _repo.Logineduser(id);
-            if (logineduser==null)
+
+            if (logineduser == null)
             {
                 return NotFound();
-            }            
+            }
+
             return Ok(logineduser);
         }
 
-        
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+
+        }
+
+
+
+
     }
     
 }

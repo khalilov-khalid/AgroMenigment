@@ -19,12 +19,12 @@ namespace API_AGROMG.Model
 
         public DateTime Finishdate { get; set; }
 
-        public User Responder { get; set; }
+        public Workers Responder { get; set; }
 
         public Action Action { get; set; }
 
         public DateTime ActionTime { get; set; }
 
-        public User PerformingUser { get; set; }
+        public Workers PerformingUser { get; set; }
     }
 }

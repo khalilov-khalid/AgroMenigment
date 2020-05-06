@@ -46,7 +46,7 @@ namespace API_AGROMG.Controllers
                 StartDate = workPlanDto.StartDate,
                 EndDate = workPlanDto.EndDate,
                 Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 4),
-                Respondent = await _context.Users.FirstOrDefaultAsync(s => s.Id == workPlanDto.RespondentId),
+                Respondent = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlanDto.RespondentId),
                 Created = logineduser,
                 Company = logineduser.Company,
                 Status = true
@@ -81,7 +81,7 @@ namespace API_AGROMG.Controllers
                 StartDate = workPlanDto.StartDate,
                 EndDate = workPlanDto.EndDate,
                 Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 1),
-                Responder = await _context.Users.FirstOrDefaultAsync(s => s.Id == workPlanDto.RespondentId),
+                Responder = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlanDto.RespondentId),
                 PerformingUser = logineduser,
                 ActionTime = DateTime.Now,
                 WorkPlan = newPlan,
@@ -123,7 +123,7 @@ namespace API_AGROMG.Controllers
                 Enddate = s.EndDate,
                 FinishDate = s.FinisDate,
                 WorkStatus = _context.ActionLanguanges.FirstOrDefault(w => w.Language.code == lang && w.Action == s.Action).Name,
-                Responder = _context.Users.FirstOrDefault(w => w.Id == s.Respondent.Id).Name,
+                Responder = _context.Workers.FirstOrDefault(w => w.Id == s.Respondent.Id).Name,
                 WorkPlanTask = _context.WorkPlanTasks.Where(w => w.WorkPlan.Id == s.Id).Select(w => new WorkPlanTaskDto() {
 
                     Id = w.Id,
@@ -171,7 +171,7 @@ namespace API_AGROMG.Controllers
             editedWorkPlan.Name = workPlan.Name;
             editedWorkPlan.StartDate = workPlan.StartDate;
             editedWorkPlan.EndDate = workPlan.EndDate;
-            editedWorkPlan.Respondent = await _context.Users.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId);
+            editedWorkPlan.Respondent = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId);
             _context.Entry(editedWorkPlan).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
@@ -182,7 +182,7 @@ namespace API_AGROMG.Controllers
                 StartDate = workPlan.StartDate,
                 EndDate = workPlan.EndDate,
                 Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 2),
-                Responder = await _context.Users.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId),
+                Responder = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId),
                 PerformingUser = logineduser,
                 ActionTime = DateTime.Now,
                 WorkPlan = editedWorkPlan,

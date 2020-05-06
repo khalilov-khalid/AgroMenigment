@@ -95,6 +95,38 @@ namespace API_AGROMG.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("API_AGROMG.Model.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Country");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.CountryLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CountryId");
+
+                    b.Property<int?>("LanguageId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("CountryLanguage");
+                });
+
             modelBuilder.Entity("API_AGROMG.Model.CropCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -167,6 +199,110 @@ namespace API_AGROMG.Migrations
                     b.HasIndex("CropCategoryId");
 
                     b.ToTable("Crops");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Demand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CheckStatus");
+
+                    b.Property<int?>("CompanyId");
+
+                    b.Property<int?>("CountryId");
+
+                    b.Property<DateTime>("CreateDate");
+
+                    b.Property<DateTime>("ExpirationDate");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("ParcelId");
+
+                    b.Property<int?>("ProductId");
+
+                    b.Property<decimal>("Quantity");
+
+                    b.Property<DateTime>("RequiredDate");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<int?>("WorkersId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("ParcelId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WorkersId");
+
+                    b.ToTable("Demands");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Fertilizer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Category");
+
+                    b.Property<int?>("CompanyId");
+
+                    b.Property<int?>("MainIngredientId");
+
+                    b.Property<int>("MeasurementUnit");
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("MainIngredientId");
+
+                    b.ToTable("Fertilizer");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.FertilizerKind", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FertilizerKind");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.FertilizerKindLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FertilizerKindId");
+
+                    b.Property<int?>("LanguageId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FertilizerKindId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("FertilizerKindLanguage");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.Gender", b =>
@@ -243,9 +379,20 @@ namespace API_AGROMG.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.HasKey("Id");
+
+                    b.ToTable("MeasurementUnits");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.MeasurementUnitLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int?>("LanguageId");
 
-                    b.Property<int>("MainId");
+                    b.Property<int?>("MeasurementUnitId");
 
                     b.Property<string>("Name");
 
@@ -253,7 +400,9 @@ namespace API_AGROMG.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("MeasurementUnits");
+                    b.HasIndex("MeasurementUnitId");
+
+                    b.ToTable("MeasurementUnitLanguage");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.MedicalStock", b =>
@@ -270,7 +419,7 @@ namespace API_AGROMG.Migrations
 
                     b.Property<DateTime>("Expirydate");
 
-                    b.Property<int?>("NameOfDrugId");
+                    b.Property<int?>("FertilizerId");
 
                     b.Property<int>("WareHourse");
 
@@ -278,7 +427,7 @@ namespace API_AGROMG.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("NameOfDrugId");
+                    b.HasIndex("FertilizerId");
 
                     b.ToTable("MedicalStock");
                 });
@@ -296,33 +445,6 @@ namespace API_AGROMG.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modules");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.NameOfDrug", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Category");
-
-                    b.Property<int?>("CompanyId");
-
-                    b.Property<int?>("MainIngredientId");
-
-                    b.Property<int>("MeasurementUnit");
-
-                    b.Property<string>("Name");
-
-                    b.Property<bool>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("MainIngredientId");
-
-                    b.ToTable("NameOfDrugs");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.Packet", b =>
@@ -426,7 +548,7 @@ namespace API_AGROMG.Migrations
                     b.ToTable("PermissionsGroups");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.Profession", b =>
+            modelBuilder.Entity("API_AGROMG.Model.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -434,7 +556,36 @@ namespace API_AGROMG.Migrations
 
                     b.Property<int?>("CompanyId");
 
-                    b.Property<string>("Key");
+                    b.Property<int?>("FertilizerKindId");
+
+                    b.Property<int?>("MainIngredientId");
+
+                    b.Property<int?>("MeasurementUnitId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("FertilizerKindId");
+
+                    b.HasIndex("MainIngredientId");
+
+                    b.HasIndex("MeasurementUnitId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Profession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CompanyId");
 
                     b.Property<bool>("Respondent");
 
@@ -447,79 +598,186 @@ namespace API_AGROMG.Migrations
                     b.ToTable("Professions");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.Technique", b =>
+            modelBuilder.Entity("API_AGROMG.Model.ProfessionLanguange", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Color");
-
-                    b.Property<int?>("CompanyId");
-
-                    b.Property<DateTime>("DateOfPurchase");
-
-                    b.Property<string>("EngineNumber");
-
-                    b.Property<string>("EnginePower");
-
-                    b.Property<int>("IsBusy");
+                    b.Property<int?>("LanguageId");
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime>("ProductionYear");
+                    b.Property<int?>("ProfessionId");
 
-                    b.Property<string>("RegistrationNumber");
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("ProfessionId");
+
+                    b.ToTable("ProfessionLanguanges");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryAccountKind", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
 
                     b.Property<bool>("Status");
 
-                    b.Property<int>("TechnicalCondition");
-
-                    b.Property<int?>("TechniqueCategoryId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("TechniqueCategoryId");
-
-                    b.ToTable("Techniques");
+                    b.ToTable("TemporaryAccountKind");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.TechniqueCategory", b =>
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryCustomer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsTrailer");
-
-                    b.Property<string>("Key");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TechniqueCategories");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("AdminStatus");
-
-                    b.Property<string>("Adress");
-
-                    b.Property<DateTime>("Birthday");
-
-                    b.Property<int?>("CompanyId");
-
-                    b.Property<string>("Email");
-
-                    b.Property<int>("Gender");
 
                     b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemporaryCustomer");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryExsel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("DocumentNumber");
+
+                    b.Property<decimal>("Quantity");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<int?>("TemporaryAccountKindId");
+
+                    b.Property<int?>("TemporaryCustomerId");
+
+                    b.Property<int?>("TemporaryInAndOutItemsId");
+
+                    b.Property<int?>("TemporaryOperationKindId");
+
+                    b.Property<int?>("TemporaryPayAccountId");
+
+                    b.Property<int?>("TemporarySectorId");
+
+                    b.Property<string>("User");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemporaryAccountKindId");
+
+                    b.HasIndex("TemporaryCustomerId");
+
+                    b.HasIndex("TemporaryInAndOutItemsId");
+
+                    b.HasIndex("TemporaryOperationKindId");
+
+                    b.HasIndex("TemporaryPayAccountId");
+
+                    b.HasIndex("TemporarySectorId");
+
+                    b.ToTable("TemporaryExsel");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryInAndOutItems", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemporaryInAndOutItems");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryOperationKind", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemporaryOperationKind");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryParcel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemporaryParcel");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryPayAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemporaryPayAccount");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporarySector", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<int?>("TemporaryParcelId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemporaryParcelId");
+
+                    b.ToTable("TemporarySector");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Users", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("PasswordHash");
 
@@ -527,40 +785,19 @@ namespace API_AGROMG.Migrations
 
                     b.Property<int?>("PermissionsGroupsId");
 
-                    b.Property<decimal>("Salary");
-
                     b.Property<bool>("Status");
-
-                    b.Property<string>("Tel");
 
                     b.Property<string>("Username");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("WorkersId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PermissionsGroupsId");
 
+                    b.HasIndex("WorkersId");
+
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.UserProfessions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ProfessionId");
-
-                    b.Property<int?>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProfessions");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.WareHourse", b =>
@@ -739,6 +976,101 @@ namespace API_AGROMG.Migrations
                     b.ToTable("WorkPlanTaskActionLogs");
                 });
 
+            modelBuilder.Entity("API_AGROMG.Model.WorkerProfessions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<string>("EndReason");
+
+                    b.Property<int?>("ProfessionId");
+
+                    b.Property<DateTime>("Startdate");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<int?>("WorkersId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfessionId");
+
+                    b.HasIndex("WorkersId");
+
+                    b.ToTable("WorkerProfessions");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.WorkerSalary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("EndSalary");
+
+                    b.Property<decimal>("GrossSalary");
+
+                    b.Property<decimal>("NetSalary");
+
+                    b.Property<DateTime>("StartSalary");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<int?>("WorkersId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkersId");
+
+                    b.ToTable("WorkerSalaries");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Workers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Adress");
+
+                    b.Property<DateTime>("Birthday");
+
+                    b.Property<int?>("CompanyId");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("Fin");
+
+                    b.Property<int>("Gender");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("SSN");
+
+                    b.Property<string>("SerialNumber");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<string>("Tel");
+
+                    b.Property<DateTime>("WorkEndDate");
+
+                    b.Property<string>("WorkEndReason");
+
+                    b.Property<DateTime>("WorkStartDate");
+
+                    b.Property<int>("WorkStatus");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Workers");
+                });
+
             modelBuilder.Entity("API_AGROMG.Model.ActionLanguange", b =>
                 {
                     b.HasOne("API_AGROMG.Model.Action", "Action")
@@ -755,6 +1087,17 @@ namespace API_AGROMG.Migrations
                     b.HasOne("API_AGROMG.Model.Packet", "Packet")
                         .WithMany()
                         .HasForeignKey("PacketId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.CountryLanguage", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("API_AGROMG.Model.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.CropCategoryLanguage", b =>
@@ -790,32 +1133,30 @@ namespace API_AGROMG.Migrations
                         .HasForeignKey("CropCategoryId");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.MainIngredient", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.MeasurementUnit", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.MedicalStock", b =>
+            modelBuilder.Entity("API_AGROMG.Model.Demand", b =>
                 {
                     b.HasOne("API_AGROMG.Model.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("API_AGROMG.Model.NameOfDrug", "NameOfDrug")
+                    b.HasOne("API_AGROMG.Model.Country", "Country")
                         .WithMany()
-                        .HasForeignKey("NameOfDrugId");
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("API_AGROMG.Model.Parcel", "Parcel")
+                        .WithMany()
+                        .HasForeignKey("ParcelId");
+
+                    b.HasOne("API_AGROMG.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("API_AGROMG.Model.Workers", "Workers")
+                        .WithMany()
+                        .HasForeignKey("WorkersId");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.NameOfDrug", b =>
+            modelBuilder.Entity("API_AGROMG.Model.Fertilizer", b =>
                 {
                     b.HasOne("API_AGROMG.Model.Company", "Company")
                         .WithMany()
@@ -824,6 +1165,46 @@ namespace API_AGROMG.Migrations
                     b.HasOne("API_AGROMG.Model.MainIngredient", "MainIngredient")
                         .WithMany()
                         .HasForeignKey("MainIngredientId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.FertilizerKindLanguage", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.FertilizerKind", "FertilizerKind")
+                        .WithMany()
+                        .HasForeignKey("FertilizerKindId");
+
+                    b.HasOne("API_AGROMG.Model.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.MainIngredient", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.MeasurementUnitLanguage", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId");
+
+                    b.HasOne("API_AGROMG.Model.MeasurementUnit", "MeasurementUnit")
+                        .WithMany()
+                        .HasForeignKey("MeasurementUnitId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.MedicalStock", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.HasOne("API_AGROMG.Model.Fertilizer", "Fertilizer")
+                        .WithMany()
+                        .HasForeignKey("FertilizerId");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.Parcel", b =>
@@ -859,6 +1240,25 @@ namespace API_AGROMG.Migrations
                         .HasForeignKey("CompanyId");
                 });
 
+            modelBuilder.Entity("API_AGROMG.Model.Product", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.HasOne("API_AGROMG.Model.FertilizerKind", "FertilizerKind")
+                        .WithMany()
+                        .HasForeignKey("FertilizerKindId");
+
+                    b.HasOne("API_AGROMG.Model.MainIngredient", "MainIngredient")
+                        .WithMany()
+                        .HasForeignKey("MainIngredientId");
+
+                    b.HasOne("API_AGROMG.Model.MeasurementUnit", "MeasurementUnit")
+                        .WithMany()
+                        .HasForeignKey("MeasurementUnitId");
+                });
+
             modelBuilder.Entity("API_AGROMG.Model.Profession", b =>
                 {
                     b.HasOne("API_AGROMG.Model.Company", "Company")
@@ -866,37 +1266,60 @@ namespace API_AGROMG.Migrations
                         .HasForeignKey("CompanyId");
                 });
 
-            modelBuilder.Entity("API_AGROMG.Model.Technique", b =>
+            modelBuilder.Entity("API_AGROMG.Model.ProfessionLanguange", b =>
                 {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
+                    b.HasOne("API_AGROMG.Model.Language", "Language")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("LanguageId");
 
-                    b.HasOne("API_AGROMG.Model.TechniqueCategory", "TechniqueCategory")
-                        .WithMany()
-                        .HasForeignKey("TechniqueCategoryId");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.User", b =>
-                {
-                    b.HasOne("API_AGROMG.Model.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.HasOne("API_AGROMG.Model.PermissionsGroups", "PermissionsGroups")
-                        .WithMany()
-                        .HasForeignKey("PermissionsGroupsId");
-                });
-
-            modelBuilder.Entity("API_AGROMG.Model.UserProfessions", b =>
-                {
                     b.HasOne("API_AGROMG.Model.Profession", "Profession")
                         .WithMany()
                         .HasForeignKey("ProfessionId");
+                });
 
-                    b.HasOne("API_AGROMG.Model.User", "User")
+            modelBuilder.Entity("API_AGROMG.Model.TemporaryExsel", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.TemporaryAccountKind", "TemporaryAccountKind")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("TemporaryAccountKindId");
+
+                    b.HasOne("API_AGROMG.Model.TemporaryCustomer", "TemporaryCustomer")
+                        .WithMany()
+                        .HasForeignKey("TemporaryCustomerId");
+
+                    b.HasOne("API_AGROMG.Model.TemporaryInAndOutItems", "TemporaryInAndOutItems")
+                        .WithMany()
+                        .HasForeignKey("TemporaryInAndOutItemsId");
+
+                    b.HasOne("API_AGROMG.Model.TemporaryOperationKind", "TemporaryOperationKind")
+                        .WithMany()
+                        .HasForeignKey("TemporaryOperationKindId");
+
+                    b.HasOne("API_AGROMG.Model.TemporaryPayAccount", "TemporaryPayAccount")
+                        .WithMany()
+                        .HasForeignKey("TemporaryPayAccountId");
+
+                    b.HasOne("API_AGROMG.Model.TemporarySector", "TemporarySector")
+                        .WithMany()
+                        .HasForeignKey("TemporarySectorId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.TemporarySector", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.TemporaryParcel", "TemporaryParcel")
+                        .WithMany()
+                        .HasForeignKey("TemporaryParcelId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Users", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.PermissionsGroups", "PermissionsGroups")
+                        .WithMany()
+                        .HasForeignKey("PermissionsGroupsId");
+
+                    b.HasOne("API_AGROMG.Model.Workers", "Workers")
+                        .WithMany()
+                        .HasForeignKey("WorkersId");
                 });
 
             modelBuilder.Entity("API_AGROMG.Model.WareHourse", b =>
@@ -927,11 +1350,11 @@ namespace API_AGROMG.Migrations
                         .WithMany()
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("API_AGROMG.Model.User", "Created")
+                    b.HasOne("API_AGROMG.Model.Workers", "Created")
                         .WithMany()
                         .HasForeignKey("CreatedId");
 
-                    b.HasOne("API_AGROMG.Model.User", "Respondent")
+                    b.HasOne("API_AGROMG.Model.Workers", "Respondent")
                         .WithMany()
                         .HasForeignKey("RespondentId");
                 });
@@ -942,11 +1365,11 @@ namespace API_AGROMG.Migrations
                         .WithMany()
                         .HasForeignKey("ActionId");
 
-                    b.HasOne("API_AGROMG.Model.User", "PerformingUser")
+                    b.HasOne("API_AGROMG.Model.Workers", "PerformingUser")
                         .WithMany()
                         .HasForeignKey("PerformingUserId");
 
-                    b.HasOne("API_AGROMG.Model.User", "Responder")
+                    b.HasOne("API_AGROMG.Model.Workers", "Responder")
                         .WithMany()
                         .HasForeignKey("ResponderId");
 
@@ -975,6 +1398,31 @@ namespace API_AGROMG.Migrations
                     b.HasOne("API_AGROMG.Model.WorkPlanTask", "WorkPlanTask")
                         .WithMany()
                         .HasForeignKey("WorkPlanTaskId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.WorkerProfessions", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Profession", "Profession")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId");
+
+                    b.HasOne("API_AGROMG.Model.Workers", "Workers")
+                        .WithMany()
+                        .HasForeignKey("WorkersId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.WorkerSalary", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Workers", "Workers")
+                        .WithMany()
+                        .HasForeignKey("WorkersId");
+                });
+
+            modelBuilder.Entity("API_AGROMG.Model.Workers", b =>
+                {
+                    b.HasOne("API_AGROMG.Model.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
                 });
 #pragma warning restore 612, 618
         }

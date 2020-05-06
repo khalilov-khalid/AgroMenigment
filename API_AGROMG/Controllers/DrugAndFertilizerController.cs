@@ -36,19 +36,35 @@ namespace API_AGROMG.Controllers
 
             var logineduser = await _auth.VerifyUser(id);
 
-            NameOfDrug drug = new NameOfDrug()
+            var _feltizerKind = await _context.FertilizerKind.FirstOrDefaultAsync(w => w.Id == data.Category);
+            if (_feltizerKind==null)
+            {
+                return BadRequest("Bele bir kategorya yoxdur");
+            }
+
+            var _mainIngredient = await _context.MainIngredients.FirstOrDefaultAsync(s => s.Id == data.MainIngredient);
+            if (_mainIngredient == null)
+            {
+                return BadRequest("Bele bir tesir edici madde yoxdur");
+            }
+            var _measurementUnit = await _context.MeasurementUnits.FirstOrDefaultAsync(s => s.Id == data.MeasurementUnit);
+            if (_measurementUnit == null)
+            {
+                return BadRequest("Bele bir kategorya yoxdur");
+            }
+            Product _product = new Product()
             {
                 Name = data.Name,
-                Category = data.Category,
-                MainIngredient = await _context.MainIngredients.FirstOrDefaultAsync(s => s.Id == data.MainIngredient),
-                MeasurementUnit = data.MeasurementUnit,
+                FertilizerKind = _feltizerKind,
+                MainIngredient = _mainIngredient,
+                MeasurementUnit = _measurementUnit,
                 Company = logineduser.Company,
                 Status = true
             };
 
             try
             {
-                await _context.NameOfDrugs.AddAsync(drug);
+                await _context.Products.AddAsync(_product);
                 await _context.SaveChangesAsync();
             }
             catch (Exception)
@@ -67,13 +83,13 @@ namespace API_AGROMG.Controllers
 
             var logineduser = await _auth.VerifyUser(id);
 
-            List<DrugAndFeltilizerReadDto> datalist = await _context.NameOfDrugs.Where(s => s.Status == true && s.Company == logineduser.Company).Select(s => new DrugAndFeltilizerReadDto()
+            List<DrugAndFeltilizerReadDto> datalist = await _context.Products.Where(s => s.FertilizerKind != null && s.Status == true && s.Company == logineduser.Company).Select(s => new DrugAndFeltilizerReadDto()
             {
-                Id=s.Id,                
-                Name=s.Name,
-                MainIngredient=s.MainIngredient.Name,
-                MeasurementUnit=  _context.MeasurementUnits.FirstOrDefault(w=>w.Language.code == lang && w.MainId==s.MeasurementUnit).Name,
-                Category=s.Category
+                Id = s.Id,
+                Name = s.Name,
+                MainIngredient = s.MainIngredient.Name,
+                MeasurementUnit = _context.MeasurementUnitLanguage.FirstOrDefault(w => w.Language.code == lang && w.MeasurementUnit == s.MeasurementUnit).Name,
+                Category = s.FertilizerKind.Id
             }).ToListAsync();
 
             return Ok(datalist);
@@ -87,14 +103,14 @@ namespace API_AGROMG.Controllers
 
             var logineduser = await _auth.VerifyUser(userid);
 
-            DrugAndFeltilizerDto data = await _context.NameOfDrugs.Select(s => new DrugAndFeltilizerDto()
+            DrugAndFeltilizerDto data = await _context.Products.Select(s => new DrugAndFeltilizerDto()
             {
-                ID=s.Id,
-                Name=s.Name,
-                Category=s.Category,
-                MainIngredient=s.MainIngredient.Id,
-                MeasurementUnit=s.MeasurementUnit
-            }).FirstOrDefaultAsync(w=>w.ID==id);
+                ID = s.Id,
+                Name = s.Name,
+                Category = s.FertilizerKind.Id,
+                MainIngredient = s.MainIngredient.Id,
+                MeasurementUnit = s.MeasurementUnit.Id
+            }).FirstOrDefaultAsync(w => w.ID == id);
 
             return Ok(data);
         }
@@ -107,12 +123,12 @@ namespace API_AGROMG.Controllers
                 return BadRequest();
             }
 
-            var editeddata = await _context.NameOfDrugs.FirstOrDefaultAsync(s => s.Id == id);
+            var editeddata = await _context.Products.FirstOrDefaultAsync(s => s.Id == id);
 
             editeddata.Name = data.Name;
             editeddata.MainIngredient = await _context.MainIngredients.FirstOrDefaultAsync(w => w.Id == data.MainIngredient);
-            editeddata.MeasurementUnit = data.MeasurementUnit;
-            editeddata.Category = data.Category;
+            editeddata.MeasurementUnit = await _context.MeasurementUnits.FirstOrDefaultAsync(w => w.Id == data.MeasurementUnit);
+            editeddata.FertilizerKind = await _context.FertilizerKind.FirstOrDefaultAsync(w => w.Id == data.Category);
 
             try
             {
@@ -131,7 +147,7 @@ namespace API_AGROMG.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDrugAndFertilizer(int id)
         {
-            var deletedData = await _context.NameOfDrugs.FirstOrDefaultAsync(s => s.Id == id);
+            var deletedData = await _context.Products.FirstOrDefaultAsync(s => s.Id == id);
             deletedData.Status = false;
 
             try
@@ -145,7 +161,7 @@ namespace API_AGROMG.Controllers
                 throw;
             }
             return Ok();
-        } 
+        }
 
 
     }
