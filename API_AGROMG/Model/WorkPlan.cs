@@ -17,9 +17,9 @@ namespace API_AGROMG.Model
         
         public DateTime FinisDate { get; set; }
 
-        public Action Action { get; set; }
+        public Parcel Parcel { get; set; }
 
-        public Workers Respondent { get; set; }
+        public Action Action { get; set; }
 
         public Workers Created { get; set; }
 

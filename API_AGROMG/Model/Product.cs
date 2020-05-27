@@ -17,10 +17,16 @@ namespace API_AGROMG.Model
 
         public MeasurementUnit MeasurementUnit { get; set; }
 
+        public Crops Crops { get; set; }
+
         public bool Status { get; set; }
 
         public Company Company { get; set; }
 
         public ICollection<Demand> DemandList { get; set; }
+
+        public ICollection<ProductLang> ProductLang { get; set; }
+
+
     }
 }

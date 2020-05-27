@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace API_AGROMG.Model
 {
     public class Parcel
     {
+        [Key]
         public int Id { get; set; }
 
         public ParcelCategory ParcelCategory { get; set; }
@@ -20,5 +22,7 @@ namespace API_AGROMG.Model
         public Company Company { get; set; }
 
         public bool Status { get; set; }
+
+        public ICollection<MapLayer> ListMaplayers { get; set; }
     }
 }

@@ -32,61 +32,71 @@ namespace API_AGROMG.Controllers
         {
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(id);
-            var product = await _context.Products.FirstOrDefaultAsync(s=>s.Id == demand.ProductId && s.Status ==true);
-            if (product == null)
-            {
-                return BadRequest("Bele bir məhsul yoxdur.");
-            }
 
-            var parcel = await _context.Parcels.FirstOrDefaultAsync(s => s.Id == demand.ParcelId && s.Status == true);
-            if (parcel == null)
-            {
-                return BadRequest("Bele bir Sahe yoxdur.");
-            }
-
-            var country = await _context.Country.FirstOrDefaultAsync(s => s.Id == demand.CountryId);
-            if (country == null)
-            {
-                return BadRequest("Bele bir Ölkə yoxdur.");
-            }
-
+            var num = String.Format("{0:d9}", (DateTime.Now.Ticks / 10) % 1000000000);
             Demand _newDemand = new Demand()
             {
                 Name = demand.Name,
-                Product = product,
-                Quantity = demand.Quantity,
-                Parcel = parcel,
-                Country = country,
-                Workers = logineduser,
-                ExpirationDate = demand.ExpirationDate,
-                RequiredDate = demand.RequiredDate,
+                DemandNumber = num,
                 Company = logineduser.Company,
                 CreateDate = DateTime.Now,
                 CheckStatus = 1,
-                Status = true                
+                Status = true,
+                Created = logineduser
             };
 
             _context.Demands.Add(_newDemand);
             await _context.SaveChangesAsync();
 
+            foreach (var item in demand.DemandProduct)
+            {
+                DemandProduct _newDemanProduct = new DemandProduct()
+                {
+                    Demand = _newDemand,
+                    Product = await _context.Products.FirstOrDefaultAsync(s => s.Id == item.ProductId),
+                    Quantity = item.Quantity,
+                    Parcel = await _context.Parcels.FirstOrDefaultAsync(s => s.Id == item.ParcelId),
+                    Country = await _context.Country.FirstOrDefaultAsync(s => s.Id == item.CountryId),
+                    Workers = await _context.Workers.FirstOrDefaultAsync(s => s.Id == item.RequestingWorkerId),
+                    ExpirationDate = item.ExpirationDate,
+                    RequiredDate = item.RequiredDate
+                };
+                _context.DemandProducts.Add(_newDemanProduct);
+                await _context.SaveChangesAsync();
+            }
+
             return StatusCode(201);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> MyDemands()
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> MyDemands(string lang)
         {
             int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var logineduser = await _auth.VerifyUser(id);
 
-            List<DemandReadDto> datalist = await _context.Demands.Where(s=>s.Workers == logineduser && s.Status == true).Select(s => new DemandReadDto()
+            List<DemandReadDto> datalist = await _context.Demands.Where(s => s.Created == logineduser && s.Status == true).Select(s => new DemandReadDto()
             {
                 Id = s.Id,
-                Name= s.Name,
+                Name = s.Name,
+                DemandNumber = s.DemandNumber,
                 CheckStatus = s.CheckStatus,
-                CreateDate = s.CreateDate,
-                RequiredDate = s.RequiredDate
+                CreateDate = s.CreateDate,     
+                DemandProducts = s.DemandProducts.Select(d=> new DemandProductReadDto() {
+                    Product = new ProductReadDto { 
+                        FertilizerKind = d.Product.FertilizerKind.FertilizerKindLanguage.FirstOrDefault(a=>a.Language.code == lang).Name,
+                        MainIngredient = d.Product.MainIngredient.Name,
+                        Name = d.Product.Name,
+                        MeasurementUnit =d.Product.MeasurementUnit.MeasurementUnitLanguage.FirstOrDefault(a=>a.Language.code == lang).Name,
+                    },
+                    Quantity  = d.Quantity,
+                    Country = d.Country.CountryLanguages.FirstOrDefault(a=>a.Language.code == lang).Name,
+                    Parcel = d.Parcel.Name,
+                    ExpirationDate = d.ExpirationDate,
+                    RequiredDate = d.RequiredDate,
+                    RequestingWorker = d.Workers.Name
+                }).ToList()
             }).ToListAsync();
-            
+
             return Ok(datalist);
         }
 

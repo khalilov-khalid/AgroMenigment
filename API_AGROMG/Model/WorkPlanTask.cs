@@ -16,6 +16,8 @@ namespace API_AGROMG.Model
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
+        
+        public Workers Respondent { get; set; }
 
         public DateTime FinishDate { get; set; }
 

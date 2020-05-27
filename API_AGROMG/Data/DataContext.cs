@@ -10,6 +10,7 @@ namespace API_AGROMG.Data
     public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
         public DbSet<Admin> Admins { get; set; }
 
         public DbSet<Language> Languages { get; set; }
@@ -45,8 +46,6 @@ namespace API_AGROMG.Data
 
         public DbSet<WareHourse> WareHourses { get; set; }
 
-        public DbSet<MedicalStock> MedicalStock { get; set; }
-
         public DbSet<CropCategory> CropCategories { get; set; }
 
         public DbSet<CropCategoryLanguage> CropCategoryLanguages { get; set; }
@@ -72,6 +71,8 @@ namespace API_AGROMG.Data
         public DbSet<WorkPlanActionLog> WorkPlanActionLogs { get; set; }
 
         public DbSet<WorkPlanTaskActionLog> WorkPlanTaskActionLogs { get; set; }
+
+        public DbSet<WorkPlanTaskFertilizer> WorkPlanTaskFertilizers { get; set; }
 
         public DbSet<Users> Users { get; set; }
 
@@ -103,11 +104,49 @@ namespace API_AGROMG.Data
 
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<ProductLang> ProductLangs { get; set; }
+
         public DbSet<Demand> Demands { get; set; }
 
+        public DbSet<DemandProduct> DemandProducts { get; set; }
 
+        public DbSet<Customer> Customers { get; set; }
 
+        public DbSet<Purchase> Purchases { get; set; }
 
+        public DbSet<PurchaseProduct> PurchaseProducts { get; set; }
+
+        public DbSet<PaymentKind> PaymentKinds { get; set; }
+
+        public DbSet<PaymentKindLanguage> PaymentKindLanguages { get; set; }
+
+        public DbSet<Currency> Currencies { get; set; }
+
+        public DbSet<Stock> Stocks { get; set; }
+
+        public DbSet<StockOperation> StockOperations { get; set; }
+
+        public DbSet<StockWaitingProduct> StockWaitingProduct { get; set; }
+
+        public DbSet<PaymentTerm> PaymentTerms { get; set; }
+
+        public DbSet<PaymentTermLang> PaymentTermLangs { get; set; }
+
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<CityLang> CityLangs { get; set; }
+
+        public DbSet<DeliveryTerm> DeliveryTerms { get; set; }
+
+        public DbSet<DeliveryTermLang> DeliveryTermLangs { get; set; }
+
+        public DbSet<CropSort> CropSorts { get; set; }
+
+        public DbSet<CropSortLang> CropSortLangs { get; set; }
+
+        public DbSet<Reproduction> Reproductions { get; set; }
+
+        public DbSet<MapLayer> MapLayers { get; set; }
 
     }
 }

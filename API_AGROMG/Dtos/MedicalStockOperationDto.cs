@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,23 +7,28 @@ namespace API_AGROMG.Dtos
 {
     public class MedicalStockOperationDto
     {
-        public int Id { get; set; }
+        public string Barcode { get; set; }
 
-        [Required]
-        public int OperationId { get; set; }
+        public string FertilizerKind { get; set; }
 
-        [Required]
-        public int Barcode { get; set; }
+        public string MainIngredient { get; set; }
 
-        [Required]
-        public decimal Count { get; set; }
+        public string ProductName { get; set; }
 
-        [Required]
-        public int NameOfDrug { get; set; }
+        public decimal Quantity { get; set; }
 
-        [Required]
-        public int WareHourse { get; set; }
+        public string MeasurementUnit { get; set; }
 
-        public DateTime Expirydate { get; set; }
+        public string WareHourseName { get; set; }
+
+        public DateTime ExpireDate { get; set; }
+
+        public string AccepterName { get; set; }
+
+        public DateTime AcceptDate { get; set; }
+
+        public int OperationNumber { get; set; }
+
+        public string Recipient { get; set; }
     }
 }

@@ -68,7 +68,9 @@ namespace API_AGROMG.Controllers
             MainIngredient mainIngredient = new MainIngredient()
             {
                 Name= data.Name,
-                Company=loginedUser.Company
+                Company=loginedUser.Company,
+                Status = true
+                
             };
 
             try

@@ -14,5 +14,9 @@ namespace API_AGROMG.Dtos
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
+
+        public int RespondentId { get; set; }
+
+        public List<WorkPlanTaskFertilizerDto> WorkPlanTaskFertilizers { get; set; }
     }
 }

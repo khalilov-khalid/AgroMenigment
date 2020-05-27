@@ -16,10 +16,7 @@ namespace API_AGROMG.Dtos
 
         [Required]
         public DateTime Birthday { get; set; }
-
-        [Required]
-        public decimal Salary { get; set; }
-
+        
         [Required]
         public string Email { get; set; }
 

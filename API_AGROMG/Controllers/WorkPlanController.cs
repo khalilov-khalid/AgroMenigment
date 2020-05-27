@@ -45,11 +45,11 @@ namespace API_AGROMG.Controllers
                 Name = workPlanDto.Name,
                 StartDate = workPlanDto.StartDate,
                 EndDate = workPlanDto.EndDate,
-                Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 4),
-                Respondent = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlanDto.RespondentId),
+                Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 4),                
                 Created = logineduser,
                 Company = logineduser.Company,
-                Status = true
+                Status = true,
+                Parcel = _context.Parcels.FirstOrDefault(s => s.Id == workPlanDto.ParcelId)
             };
             try
             {
@@ -69,42 +69,27 @@ namespace API_AGROMG.Controllers
                     StartDate = item.StartDate,
                     EndDate = item.EndDate,
                     WorkPlan = newPlan,
-                    Status = true
+                    Status = true,
+                    Respondent = _context.Workers.FirstOrDefault(s=>s.Id == item.RespondentId)
                 };
                 await _context.WorkPlanTasks.AddAsync(newtask);
                 await _context.SaveChangesAsync();
-            }
-            
-            WorkPlanActionLog log = new WorkPlanActionLog()
-            {
-                Name = workPlanDto.Name,
-                StartDate = workPlanDto.StartDate,
-                EndDate = workPlanDto.EndDate,
-                Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 1),
-                Responder = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlanDto.RespondentId),
-                PerformingUser = logineduser,
-                ActionTime = DateTime.Now,
-                WorkPlan = newPlan,
-            };
-            await _context.WorkPlanActionLogs.AddAsync(log);
-            await _context.SaveChangesAsync();
 
-            var tasks = await _context.WorkPlanTasks.Where(s => s.WorkPlan == newPlan).ToListAsync();
-            foreach (var item in tasks)
-            {
-                WorkPlanTaskActionLog newtasklog = new WorkPlanTaskActionLog()
+                if (item.WorkPlanTaskFertilizers != null)
                 {
-                    name = item.Name,
-                    Startdate = item.StartDate,
-                    EndDate = item.EndDate,
-                    WorkPlanActionLog = log,
-                    Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 1),
-                    WorkPlanTask=item
-                };
-                await _context.WorkPlanTaskActionLogs.AddAsync(newtasklog);
-                await _context.SaveChangesAsync();
-            }
-
+                    foreach (var itemFeltilizer in item.WorkPlanTaskFertilizers)
+                    {
+                        WorkPlanTaskFertilizer _newTaskFertilizer = new WorkPlanTaskFertilizer()
+                        {
+                            Product = _context.Products.FirstOrDefault(s => s.Id == itemFeltilizer.ProductId),
+                            Quantity = itemFeltilizer.Quantity,
+                            WorkPlanTask = newtask
+                        };
+                        await _context.WorkPlanTaskFertilizers.AddAsync(_newTaskFertilizer);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }        
 
             return StatusCode(201);
         }
@@ -123,127 +108,138 @@ namespace API_AGROMG.Controllers
                 Enddate = s.EndDate,
                 FinishDate = s.FinisDate,
                 WorkStatus = _context.ActionLanguanges.FirstOrDefault(w => w.Language.code == lang && w.Action == s.Action).Name,
-                Responder = _context.Workers.FirstOrDefault(w => w.Id == s.Respondent.Id).Name,
-                WorkPlanTask = _context.WorkPlanTasks.Where(w => w.WorkPlan.Id == s.Id).Select(w => new WorkPlanTaskDto() {
+                WorkPlanTask = _context.WorkPlanTasks.Where(w => w.WorkPlan.Id == s.Id).Select(w => new WorkPlanTaskReadDto()
+                {
 
                     Id = w.Id,
                     Name = w.Name,
                     StartDate = w.StartDate,
-                    EndDate = w.EndDate
+                    EndDate = w.EndDate,
+                    Respondent = _context.Workers.FirstOrDefault(a => a.Id == w.Respondent.Id).Name,
+                    Status = w.Status,
+                    WorkPlanTaskFertilizer = _context.WorkPlanTaskFertilizers.Where(a=>a.WorkPlanTask.Id == w.Id).Select(a=> new WorkPlanTaskFertilizerReadDto() 
+                    {
+                        Id = a.Id,
+                        FertilizerKind = a.Product.FertilizerKind.FertilizerKindLanguage.FirstOrDefault(r=>r.Language.code== lang).Name,
+                        MainIngredient = a.Product.MainIngredient.Name,
+                        Name = a.Product.Name,
+                        Quantity = a.Quantity,
+                        MeasurementUnit = a.Product.MeasurementUnit.MeasurementUnitLanguage.FirstOrDefault(r=>r.Language.code == lang).Name
+                    }).ToList()
                 }).ToList()
             }).ToListAsync();
             return Ok(data);
         }
 
-        [HttpGet("{lang}/{id}")]
-        public async Task<ActionResult> GetWorkPlan(int id)
-        {
-            WorkPlanUpdateDto data = await _context.WorkPlans.Select(s => new WorkPlanUpdateDto()
-            {
-                Id = s.Id,
-                Name = s.Name,
-                StartDate = s.StartDate,
-                EndDate = s.EndDate,
-                RespondentId = s.Respondent.Id,
-                WorkPlanTask = _context.WorkPlanTasks.Where(w => w.WorkPlan.Id == s.Id).Select(w => new WorkPlanTaskDto()
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    StartDate = w.StartDate,
-                    EndDate = w.EndDate
-                }).ToList()
-            }).FirstOrDefaultAsync(s=>s.Id == id);
-            return Ok(data);
-        }
+        //[HttpGet("{lang}/{id}")]
+        //public async Task<ActionResult> GetWorkPlan(int id)
+        //{
+        //    WorkPlanUpdateDto data = await _context.WorkPlans.Select(s => new WorkPlanUpdateDto()
+        //    {
+        //        Id = s.Id,
+        //        Name = s.Name,
+        //        StartDate = s.StartDate,
+        //        EndDate = s.EndDate,                
+        //        WorkPlanTask = _context.WorkPlanTasks.Where(w => w.WorkPlan.Id == s.Id).Select(w => new WorkPlanTaskDto()
+        //        {
+        //            Id = w.Id,
+        //            Name = w.Name,
+        //            StartDate = w.StartDate,
+        //            EndDate = w.EndDate,
+        //            Responder =w.Respondent.Name
+        //        }).ToList()
+        //    }).FirstOrDefaultAsync(s=>s.Id == id);
+        //    return Ok(data);
+        //}
 
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateWorkPlan(int id, [FromBody] WorkPlanUpdateDto workPlan)
-        {
-            int userid = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var logineduser = await _auth.VerifyUser(userid);
-            if (id != workPlan.Id)
-            {
-                return BadRequest("Idler uygun gelmir");
-            }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> UpdateWorkPlan(int id, [FromBody] WorkPlanUpdateDto workPlan)
+        //{
+        //    int userid = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //    var logineduser = await _auth.VerifyUser(userid);
+        //    if (id != workPlan.Id)
+        //    {
+        //        return BadRequest("Idler uygun gelmir");
+        //    }
 
-            var editedWorkPlan = await _context.WorkPlans.FirstOrDefaultAsync(s => s.Id == workPlan.Id);
-            editedWorkPlan.Name = workPlan.Name;
-            editedWorkPlan.StartDate = workPlan.StartDate;
-            editedWorkPlan.EndDate = workPlan.EndDate;
-            editedWorkPlan.Respondent = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId);
-            _context.Entry(editedWorkPlan).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-
-            WorkPlanActionLog log = new WorkPlanActionLog()
-            {
-                Name = workPlan.Name,
-                StartDate = workPlan.StartDate,
-                EndDate = workPlan.EndDate,
-                Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 2),
-                Responder = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId),
-                PerformingUser = logineduser,
-                ActionTime = DateTime.Now,
-                WorkPlan = editedWorkPlan,
-            };
-            await _context.WorkPlanActionLogs.AddAsync(log);
-            await _context.SaveChangesAsync();
+        //    var editedWorkPlan = await _context.WorkPlans.FirstOrDefaultAsync(s => s.Id == workPlan.Id);
+        //    editedWorkPlan.Name = workPlan.Name;
+        //    editedWorkPlan.StartDate = workPlan.StartDate;
+        //    editedWorkPlan.EndDate = workPlan.EndDate;
+        //    editedWorkPlan.Respondent = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId);
+        //    _context.Entry(editedWorkPlan).State = EntityState.Modified;
+        //    await _context.SaveChangesAsync();
 
 
-            foreach (var item in workPlan.WorkPlanTask)
-            {
-                if (item.Id == null || item.Id == 0 )
-                {
-                    WorkPlanTask newtask = new WorkPlanTask()
-                    {
-                        Name = item.Name,
-                        StartDate = item.StartDate,
-                        EndDate = item.EndDate,
-                        WorkPlan = editedWorkPlan,
-                        Status = true
-                    };
-                    await _context.WorkPlanTasks.AddAsync(newtask);
-                    await _context.SaveChangesAsync();
+        //    WorkPlanActionLog log = new WorkPlanActionLog()
+        //    {
+        //        Name = workPlan.Name,
+        //        StartDate = workPlan.StartDate,
+        //        EndDate = workPlan.EndDate,
+        //        Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 2),
+        //        Responder = await _context.Workers.FirstOrDefaultAsync(s => s.Id == workPlan.RespondentId),
+        //        PerformingUser = logineduser,
+        //        ActionTime = DateTime.Now,
+        //        WorkPlan = editedWorkPlan,
+        //    };
+        //    await _context.WorkPlanActionLogs.AddAsync(log);
+        //    await _context.SaveChangesAsync();
 
 
-                    WorkPlanTaskActionLog newtasklog = new WorkPlanTaskActionLog()
-                    {
-                        name = item.Name,
-                        Startdate = item.StartDate,
-                        EndDate = item.EndDate,
-                        WorkPlanActionLog = log,
-                        Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 1),
-                        WorkPlanTask = newtask
-                    };
-                    await _context.WorkPlanTaskActionLogs.AddAsync(newtasklog);
-                    await _context.SaveChangesAsync();
-                }
-                else {
-                    var editedTask = await _context.WorkPlanTasks.FirstOrDefaultAsync(s => s.Id == item.Id);
-                    editedTask.Name = item.Name;
-                    editedTask.StartDate = item.StartDate;
-                    editedTask.EndDate = item.EndDate;
-                    _context.Entry(editedTask).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+        //    foreach (var item in workPlan.WorkPlanTask)
+        //    {
+        //        if (item.Id == null || item.Id == 0 )
+        //        {
+        //            WorkPlanTask newtask = new WorkPlanTask()
+        //            {
+        //                Name = item.Name,
+        //                StartDate = item.StartDate,
+        //                EndDate = item.EndDate,
+        //                WorkPlan = editedWorkPlan,
+        //                Status = true
+        //            };
+        //            await _context.WorkPlanTasks.AddAsync(newtask);
+        //            await _context.SaveChangesAsync();
 
-                    WorkPlanTaskActionLog newtasklog = new WorkPlanTaskActionLog()
-                    {
-                        name = item.Name,
-                        Startdate = item.StartDate,
-                        EndDate = item.EndDate,
-                        WorkPlanActionLog = log,
-                        Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 2),
-                        WorkPlanTask = editedTask
-                    };
-                    await _context.WorkPlanTaskActionLogs.AddAsync(newtasklog);
-                    await _context.SaveChangesAsync();
-                }
-            }
 
-            return Ok();
-        }
+        //            WorkPlanTaskActionLog newtasklog = new WorkPlanTaskActionLog()
+        //            {
+        //                name = item.Name,
+        //                Startdate = item.StartDate,
+        //                EndDate = item.EndDate,
+        //                WorkPlanActionLog = log,
+        //                Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 1),
+        //                WorkPlanTask = newtask
+        //            };
+        //            await _context.WorkPlanTaskActionLogs.AddAsync(newtasklog);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        else {
+        //            var editedTask = await _context.WorkPlanTasks.FirstOrDefaultAsync(s => s.Id == item.Id);
+        //            editedTask.Name = item.Name;
+        //            editedTask.StartDate = item.StartDate;
+        //            editedTask.EndDate = item.EndDate;
+        //            _context.Entry(editedTask).State = EntityState.Modified;
+        //            await _context.SaveChangesAsync();
 
-        
+        //            WorkPlanTaskActionLog newtasklog = new WorkPlanTaskActionLog()
+        //            {
+        //                name = item.Name,
+        //                Startdate = item.StartDate,
+        //                EndDate = item.EndDate,
+        //                WorkPlanActionLog = log,
+        //                Action = await _context.Actions.FirstOrDefaultAsync(s => s.Id == 2),
+        //                WorkPlanTask = editedTask
+        //            };
+        //            await _context.WorkPlanTaskActionLogs.AddAsync(newtasklog);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //    }
+
+        //    return Ok();
+        //}
+
+
     }
 }

@@ -10,6 +10,15 @@ namespace API_AGROMG.Dtos
     {
         [Required]
         public string Name { get; set; }
+
+        public List<DemanProductCreateDto> DemandProduct { get; set; }
+
+
+
+    }
+
+    public class DemanProductCreateDto
+    {
         [Required]
         public int ProductId { get; set; }
         [Required]
@@ -22,5 +31,9 @@ namespace API_AGROMG.Dtos
         public DateTime ExpirationDate { get; set; }
         [Required]
         public DateTime RequiredDate { get; set; }
+
+        public int RequestingWorkerId { get; set; }
     }
+
+
 }

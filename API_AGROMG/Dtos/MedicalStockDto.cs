@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 namespace API_AGROMG.Dtos
 {
     public class MedicalStockDto
-    {
-        public int Id { get; set; }
+    {        
+        public string FertilizerKind { get; set; }
 
-        public int Barcode { get; set; }
+        public string MainIngredient { get; set; }
 
-        public decimal Count { get; set; }
+        public string ProductName { get; set; }
 
-        public int NameOfDrug { get; set; }
+        public decimal Quantity { get; set; }
 
-        public int WareHourse { get; set; }
+        public string MeasurementUnit { get; set; }
 
-        public DateTime Expirydate { get; set; }
     }
 }

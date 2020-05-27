@@ -13,7 +13,7 @@ namespace API_AGROMG.Dtos
 
         public DateTime EndDate { get; set; }
 
-        public int RespondentId { get; set; }
+        public int ParcelId { get; set; }
 
         public List<WorkPlanTaskDto> WorkPlanTasks { get; set; }
     }

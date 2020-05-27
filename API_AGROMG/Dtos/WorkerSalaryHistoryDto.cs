@@ -7,6 +7,8 @@ namespace API_AGROMG.Dtos
 {
     public class WorkerSalaryHistoryDto
     {
+        public int Id { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public decimal GrossSalary { get; set; }

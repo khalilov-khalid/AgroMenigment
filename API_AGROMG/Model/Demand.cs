@@ -11,19 +11,7 @@ namespace API_AGROMG.Model
 
         public string Name { get; set; }
 
-        public Product Product { get; set; }
-
-        public decimal Quantity { get; set; }
-
-        public Parcel Parcel { get; set; }
-
-        public Country Country { get; set; }
-
-        public Workers Workers { get; set; }
-
-        public DateTime ExpirationDate { get; set; }
-
-        public DateTime RequiredDate { get; set; }
+        public string DemandNumber { get; set; }
 
         public DateTime CreateDate { get; set; }
 
@@ -31,6 +19,10 @@ namespace API_AGROMG.Model
 
         public int CheckStatus { get; set; }
 
+        public Workers Created { get; set; }
+
         public bool Status { get; set; }
+
+        public ICollection<DemandProduct> DemandProducts { get; set; }
     }
 }

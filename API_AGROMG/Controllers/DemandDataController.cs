@@ -112,6 +112,39 @@ namespace API_AGROMG.Controllers
             return Ok(data);
         }
 
+        [HttpGet("Profession/{lang}")]
+        public async Task<ActionResult> GetProfession(string lang)
+        {
+            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var logineduser = await _auth.VerifyUser(id);
+
+            List<StandartDto> data = await _context.ProfessionLanguanges
+                .Where(s =>s.Profession.Company == logineduser.Company && s.Language.code == lang && s.Profession.Status == true)
+                .Select(s => new StandartDto()
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToListAsync();
+
+            return Ok(data);
+        }
+
+        [HttpGet("Workers/{Id}")]
+        public async Task<ActionResult> GetWorker(int id)
+        {
+            int loginid = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var logineduser = await _auth.VerifyUser(loginid);
+
+            List<StandartDto> data = await _context.WorkerProfessions
+                .Where(s => s.Profession.Id == id && s.Workers.Company == logineduser.Company &&  s.Workers.Status == true )
+                .Select(s => new StandartDto()
+                {
+                    Id = s.Workers.Id,
+                    Name = s.Workers.Name
+                }).ToListAsync();
+            return Ok(data);
+        }
+
 
     }
 }

@@ -65,9 +65,6 @@ namespace API_AGROMG.Controllers
                 GrossSalary = (_context.WorkerSalaries.FirstOrDefault(w => w.Workers.Id == s.Id)==null) ? "": _context.WorkerSalaries.FirstOrDefault(w => w.Workers.Id == s.Id).GrossSalary.ToString(),
                 NetSalary = (_context.WorkerSalaries.FirstOrDefault(w => w.Workers.Id == s.Id)==null) ? "": _context.WorkerSalaries.FirstOrDefault(w => w.Workers.Id == s.Id).NetSalary.ToString()
             }).ToList();
-
-
-
             return Ok(userlist);
         }
 
@@ -90,9 +87,11 @@ namespace API_AGROMG.Controllers
                 Email = worker.Email,
                 Phone = worker.Tel,
                 WorkStartDate = worker.WorkStartDate,
-                WorkStatus = worker.WorkStatus                
+                WorkStatus = worker.WorkStatus,
+                Fin = worker.Fin,
+                SerialNumber = worker.SerialNumber,
+                SSN = worker.SSN
             };
-
             return Ok(Worker);
         }
 
@@ -238,10 +237,14 @@ namespace API_AGROMG.Controllers
 
             var oldSalary = await _context.WorkerSalaries.FirstOrDefaultAsync(s =>s.Workers == Worker && s.Status == true && s.EndSalary == null);
 
-            oldSalary.EndSalary = salary.StartDate;
-            oldSalary.Status = false;
-            _context.Entry(oldSalary).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            if (oldSalary == null)
+            {
+                oldSalary.EndSalary = salary.StartDate;
+                oldSalary.Status = false;
+                _context.Entry(oldSalary).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            
 
             WorkerSalary newSalary = new WorkerSalary()
             {
@@ -268,12 +271,13 @@ namespace API_AGROMG.Controllers
 
             List<WorkerSalaryHistoryDto> data = await _context.WorkerSalaries.Where(s => s.Workers == worker).OrderByDescending(s=>s.Id).Select(s => new WorkerSalaryHistoryDto()
             {
+                Id = s.Id,
                 StartDate = s.StartSalary,
                 GrossSalary = s.GrossSalary,
                 NetSalary = s.NetSalary,
                 EndDate =s.EndSalary
             }).ToListAsync();
-            return Ok();
+            return Ok(data);
         }
 
 

@@ -14,5 +14,7 @@ namespace API_AGROMG.Model
         public Company Company { get; set; }
 
         public bool Status { get; set; }
+
+        public ICollection<CropLanguage> CropLanguages { get; set; }
     }
 }
